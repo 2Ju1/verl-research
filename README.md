@@ -187,6 +187,7 @@ results/data/                 Raw evidence grouped by comparison
 Start with these artifacts:
 
 - [Experiment guide](docs/EXPERIMENTS.md)
+- [Engineering insights and debugging notes (Korean)](docs/ENGINEERING_INSIGHTS_KO.md)
 - [Korean study report](reports/STUDY_REPORT_KO.md)
 - [Result index](results/README.md)
 

@@ -44,8 +44,8 @@ activation placement. These runs established two points:
 - Merely storing optimizer state on CPU does not remove the Update peak when it
   must be loaded back for GPU AdamW.
 
-The older matrix analysis remains traceable in the complete experiment-history
-inventory, but it is not presented as a primary study result.
+The older matrix analysis is not presented as a primary study result; only the
+adopted comparisons are retained in `results/data/`.
 
 ### 3.2 Phase-local measurement correction
 
