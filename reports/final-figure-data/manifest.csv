@@ -8,4 +8,4 @@ rootcause_abc_comparison,outputs/rootcause-abc-sequential-gpu1-v1/plot_rootcause
 cpu_adam_05b_by_phase,outputs/pa-repro-fp32-v1/cpu-adam-summary/plot_cpu_adam_05b_phases.py,outputs/pa-late-gpu-adam-30steps-v1;outputs/pa-cpu-adam-all-phase-fp32-v1,final
 nostream_vs_16mib_optimized_legacy_residual,,residual-derived,excluded
 qwen15b_fp32_capacity,outputs/pa-capacity-fp32-qwen15b-bucket-sweep-v1/summary/plot_15b_capacity.py,outputs/pa-capacity-fp32-qwen15b-v1;outputs/pa-capacity-fp32-qwen15b-nostream-oom-snapshot-v2;outputs/pa-capacity-fp32-qwen15b-bucket-sweep-v1,final
-bucket_size_sweep_05b,tmp/optimized_bucket_sweep.json,outputs/pa-optimized-bucket-sweep-v1,diagnostic_overlap_off
+bucket_size_sweep_05b,reports/final-figure-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json,outputs/pa-optimized-bucket-sweep-v1,diagnostic_overlap_off

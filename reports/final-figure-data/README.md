@@ -212,7 +212,7 @@ MPLCONFIGDIR=/tmp/verl-final-figures \
 ### E. Qwen2.5-0.5B bucket-size sweep
 
 - Raw result root: `outputs/pa-optimized-bucket-sweep-v1`
-- Matrix: `tmp/optimized_bucket_sweep.json`
+- Matrix: `reports/final-figure-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json`
 - Buckets: 16, 32, 64, 128, 256, 512 MiB
 - Repeats: 각 bucket마다 r1, r2, r3
 - Run IDs: `STREAM-OPT-B{16,32,64,128,256,512}-r{1,2,3}`
