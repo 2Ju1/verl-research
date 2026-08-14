@@ -229,10 +229,10 @@ peak 원인을 해결하므로 함께 적용했을 때만 1.5B training이 성�
 
 ## 10. 증거와 재현 경로
 
-- Figure provenance: `reports/result-data/README.md`
-- Curated raw data 사본: `reports/result-data/collected/`
-- 전체 512-run 원장: `reports/result-data/experiment-history/all_runs.csv`
-- 전체 시행착오: `reports/result-data/experiment-history/EXPERIMENT_HISTORY.md`
+- Figure provenance: `results/README.md`
+- Curated raw data 사본: `results/data/`
+- 전체 512-run 원장: `results/history/all_runs.csv`
+- 전체 시행착오: `results/history/EXPERIMENT_HISTORY.md`
 - 실행 방법과 측정 규칙: `docs/EXPERIMENTS.md`
 
 보고한 performance 수치는 telemetry/detail/Nsight를 끈 반복 run에서 읽고,

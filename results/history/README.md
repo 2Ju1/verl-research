@@ -37,7 +37,7 @@
 
 ```bash
 envs/verl-titan/bin/python \
-  reports/result-data/build_experiment_inventory.py
+  results/build_experiment_inventory.py
 ```
 
 재생성기는 `outputs/**/run.json`, `result.json`, stdout 및 aggregate 결과를 읽어
@@ -48,4 +48,4 @@ run/group 원장을 갱신한다. 사람이 해석한 연대기인 `EXPERIMENT_H
 
 - 결과 그림별 출처: `../README.md`
 - 결과 그림 데이터 manifest: `../manifest.csv`
-- 필요한 원본만 모은 사본: `../collected/`
+- 필요한 원본만 모은 사본: `../data/`

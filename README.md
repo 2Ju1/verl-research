@@ -118,7 +118,7 @@ The implementation exploits this schedule in three layers:
 The detailed design, controls, measurement boundaries, commands, and known
 limitations are in [Experiment guide](docs/EXPERIMENTS.md). The complete
 trial-and-error history is in
-[Experiment history](reports/result-data/experiment-history/EXPERIMENT_HISTORY.md).
+[Experiment history](results/history/EXPERIMENT_HISTORY.md).
 
 ## Reproduce
 
@@ -162,7 +162,7 @@ is written under `outputs/`, which is intentionally ignored by Git.
 # Historical 16--512 MiB bucket sweep (Adam--H2D overlap was OFF)
 .venv/bin/python \
   src/verl/benchmarks/offload/run_matrix.py \
-  --matrix reports/result-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json \
+  --matrix results/data/05_bucket_size_sweep_05b/optimized_bucket_sweep.json \
   --output outputs/pa-optimized-bucket-sweep-v1 \
   --repeats 3 --warmup-steps 2
 ```
@@ -181,19 +181,19 @@ data/gsm8k/                   Small benchmark dataset
 docs/EXPERIMENTS.md           Experimental design and reproduction guide
 reports/                      Technical reports and plotting scripts
 reports/figures/              Publication-ready figures
-reports/result-data/          Curated result data and provenance manifest
-  collected/                  Minimal raw evidence for result figures
-  experiment-history/         512-run inventory and trial-and-error record
+results/                      Result index and provenance manifest
+results/data/                 Raw evidence grouped by comparison
+results/history/              512-run inventory and trial-and-error record
 ```
 
 Start with these artifacts:
 
 - [Experiment guide](docs/EXPERIMENTS.md)
 - [Korean study report](reports/STUDY_REPORT_KO.md)
-- [Result-data manifest](reports/result-data/README.md)
-- [Full experiment history](reports/result-data/experiment-history/EXPERIMENT_HISTORY.md)
-- [All 512 runs (CSV)](reports/result-data/experiment-history/all_runs.csv)
-- [All 95 output groups](reports/result-data/experiment-history/GROUP_CATALOG.md)
+- [Result index](results/README.md)
+- [Full experiment history](results/history/EXPERIMENT_HISTORY.md)
+- [All 512 runs (CSV)](results/history/all_runs.csv)
+- [All 95 output groups](results/history/GROUP_CATALOG.md)
 
 ## Data interpretation rules
 

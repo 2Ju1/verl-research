@@ -7,7 +7,7 @@ from matplotlib import font_manager
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SUMMARY = ROOT / "reports/result-data/collected/02_allgpu_vs_phase_offload"
+SUMMARY = ROOT / "results/data/02_allgpu_vs_phase_offload"
 
 font_path = Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc")
 if font_path.exists():

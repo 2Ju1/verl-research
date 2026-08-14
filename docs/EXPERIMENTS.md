@@ -4,7 +4,7 @@ This document explains how the study was constructed, how intermediate
 results should be interpreted, and how to reproduce the main comparisons. It
 is intentionally more operational than the root README. For the complete
 chronology of all 95 experiment groups and 512 runs, see the
-[full experiment history](../reports/result-data/experiment-history/EXPERIMENT_HISTORY.md).
+[full experiment history](../results/history/EXPERIMENT_HISTORY.md).
 
 ## 1. Research objectives
 
@@ -212,7 +212,7 @@ known reproducibility limitation, not an interchangeable path alias.
 ```bash
 CUDA_VISIBLE_DEVICES=0 .venv/bin/python \
   src/verl/benchmarks/offload/run_matrix.py \
-  --matrix reports/result-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json \
+  --matrix results/data/05_bucket_size_sweep_05b/optimized_bucket_sweep.json \
   --output outputs/pa-optimized-bucket-sweep-v1 \
   --repeats 3 \
   --warmup-steps 2
@@ -228,7 +228,7 @@ After new runs are added under `outputs/`:
 
 ```bash
 .venv/bin/python \
-  reports/result-data/build_experiment_inventory.py
+  results/build_experiment_inventory.py
 ```
 
 This updates the run/group machine-readable indexes. It does not overwrite the
@@ -245,20 +245,20 @@ MPLCONFIGDIR=/tmp/verl-result-figures \
 ```
 
 Figure-specific raw inputs and plotting scripts are listed in the
-[result-data manifest](../reports/result-data/README.md).
+[result manifest](../results/README.md).
 
 ## 7. Evidence map
 
 | Claim | Primary tracked evidence |
 |---|---|
-| Six-phase placement memory | `reports/result-data/collected/02_allgpu_vs_phase_offload/` |
-| GPU versus CPU AdamW | `reports/result-data/collected/01_phase_offload_vs_cpu_adamw/` |
-| No-stream versus optimized 16 MiB | `reports/result-data/collected/03_nostream_vs_stream16/` |
-| 1.5B OOM/success boundary | `reports/result-data/collected/04_qwen15b_capacity/` |
-| 0.5B bucket sweep | `reports/result-data/collected/05_bucket_size_sweep_05b/` |
-| Figure provenance | `reports/result-data/manifest.csv` |
-| Every local run | `reports/result-data/experiment-history/all_runs.csv` |
-| Trial-and-error chronology | `reports/result-data/experiment-history/EXPERIMENT_HISTORY.md` |
+| Six-phase placement memory | `results/data/02_allgpu_vs_phase_offload/` |
+| GPU versus CPU AdamW | `results/data/01_phase_offload_vs_cpu_adamw/` |
+| No-stream versus optimized 16 MiB | `results/data/03_nostream_vs_stream16/` |
+| 1.5B OOM/success boundary | `results/data/04_qwen15b_capacity/` |
+| 0.5B bucket sweep | `results/data/05_bucket_size_sweep_05b/` |
+| Figure provenance | `results/manifest.csv` |
+| Every local run | `results/history/all_runs.csv` |
+| Trial-and-error chronology | `results/history/EXPERIMENT_HISTORY.md` |
 
 ## 8. Known limitations
 

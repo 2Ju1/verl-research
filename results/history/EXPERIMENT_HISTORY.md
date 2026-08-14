@@ -12,7 +12,7 @@
 - `all_runs.json`: 같은 내용을 JSON으로 보존
 - `output_groups.csv`: 95개 실험군의 성공/실패/미완료 수와 실행 시각
 - `GROUP_CATALOG.md`: 모든 실험군과 개별 run의 표
-- 생성기: `reports/result-data/build_experiment_inventory.py`
+- 생성기: `results/build_experiment_inventory.py`
 
 이 문서의 판정 표기:
 

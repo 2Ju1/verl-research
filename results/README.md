@@ -1,13 +1,16 @@
-# Result data manifest
+# Results and data
 
 연구 결과 그림이 어떤 데이터와 스크립트에서 생성되는지 추적하기 위한 목록이다.
 모든 시간은 별도 표기가 없으면 warm-up 2 training steps를 제외한 평균이며,
 메모리는 GiB이다.
 
+핵심 원본 데이터는 비교 항목별로 `data/01_*`부터 `data/05_*`까지 정리되어
+있다. 이 문서에서 결과 수치와 해당 데이터 경로를 바로 확인할 수 있다.
+
 전체 시행착오와 95개 실험군·512개 run의 전수 기록은
-`experiment-history/README.md`에서 시작한다. 상세 연대기는
-`experiment-history/EXPERIMENT_HISTORY.md`, 기계 판독 원장은
-`experiment-history/all_runs.csv`와 `experiment-history/all_runs.json`이다.
+`history/README.md`에서 시작한다. 상세 연대기는
+`history/EXPERIMENT_HISTORY.md`, 기계 판독 원장은
+`history/all_runs.csv`와 `history/all_runs.json`이다.
 
 ## 1. All-on-GPU vs phase offload
 
@@ -191,11 +194,11 @@ MPLCONFIGDIR=/tmp/verl-result-figures \
 ### E. Qwen2.5-0.5B bucket-size sweep
 
 - Raw result root: `outputs/pa-optimized-bucket-sweep-v1`
-- Matrix: `reports/result-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json`
+- Matrix: `results/data/05_bucket_size_sweep_05b/optimized_bucket_sweep.json`
 - Buckets: 16, 32, 64, 128, 256, 512 MiB
 - Repeats: 각 bucket마다 r1, r2, r3
 - Run IDs: `STREAM-OPT-B{16,32,64,128,256,512}-r{1,2,3}`
-- Collected copy: `reports/result-data/collected/05_bucket_size_sweep_05b`
+- Collected copy: `results/data/05_bucket_size_sweep_05b`
 - Common settings: 3 staging slots, async D2H, early gradient release,
   reusable GPU packing buffers, direct CPU gradient buffers.
 - Important limitation: 이 sweep은 `overlap_h2d_with_cpu_update=false`로 수행됐다.
