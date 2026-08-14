@@ -1,0 +1,40 @@
+{
+  "run_id": "FP32-LATE-GGG-r1",
+  "config": {
+    "id": "FP32-LATE-GGG",
+    "label": "Actor GPU / Reference GPU / Adam GPU",
+    "strategy": "single_gpu_unwrapped",
+    "compute_dtype": "fp32",
+    "rollout_dtype": "float32",
+    "actor_param": false,
+    "ref_param": false,
+    "actor_optimizer": false,
+    "cpu_optimizer": false,
+    "activation": false,
+    "adamw_foreach": false,
+    "ppo_micro_batch_size_per_gpu": 4
+  },
+  "repeat": 1,
+  "warmup_steps": 0,
+  "model_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "detail": true,
+  "sync": false,
+  "nsys": false,
+  "command": [
+    "bash",
+    "/mnt/sda/juwon/verl-research/src/verl/benchmarks/offload/base_grpo_hf.sh",
+    "actor_rollout_ref.ref.fsdp_config.param_offload=false",
+    "actor_rollout_ref.actor.fsdp_config.optimizer_offload=false",
+    "actor_rollout_ref.model.enable_activation_offload=false",
+    "actor_rollout_ref.actor.fsdp_config.param_offload=false",
+    "actor_rollout_ref.actor.optim.cpu_update=false",
+    "actor_rollout_ref.actor.strategy=single_gpu_unwrapped",
+    "+actor_rollout_ref.actor.autocast_dtype=fp32",
+    "+actor_rollout_ref.ref.autocast_dtype=fp32",
+    "actor_rollout_ref.rollout.dtype=float32",
+    "actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=4",
+    "actor_rollout_ref.actor.optim.foreach=false",
+    "trainer.experiment_name=FP32-LATE-GGG-r1"
+  ],
+  "started_at": 1786341570.3497446
+}

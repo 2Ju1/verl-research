@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+ <defs>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity=".12"/></filter>
+  <marker id="arrow" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0 0L11 5.5 0 11Z" fill="#26374a"/></marker>
+  <marker id="blue" markerWidth="11" markerHeight="11" refX="10" refY="5.5" orient="auto"><path d="M0 0L11 5.5 0 11Z" fill="#147d9b"/></marker>
+  <style>
+   .title{font:700 34px Arial,sans-serif;fill:#111827}.subtitle{font:500 17px Arial,sans-serif;fill:#475569}.head{font:700 27px Arial,sans-serif;fill:#111827}.role{font:700 17px Arial,sans-serif}.body{font:500 16px Arial,sans-serif;fill:#334155}.small{font:500 14px Arial,sans-serif;fill:#64748b}.tag{font:700 14px Arial,sans-serif}.center{text-anchor:middle}.arrow{stroke:#26374a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style>
+ </defs>
+ <rect width="1500" height="900" fill="#fff"/>
+ <text x="58" y="58" class="title">Who Does What? — VERL, Hugging Face, and FSDP</text>
+ <text x="58" y="90" class="subtitle">VERL orchestrates the GRPO workflow · Hugging Face performs model computation · FSDP manages training-state placement</text>
+
+ <!-- VERL controller -->
+ <g filter="url(#shadow)"><rect x="58" y="130" width="1384" height="175" rx="22" fill="#eaf2ff" stroke="#2563eb" stroke-width="3"/></g>
+ <rect x="84" y="151" width="220" height="40" rx="20" fill="#2563eb"/><text x="194" y="178" class="role center" style="fill:white">VERL</text>
+ <text x="329" y="177" class="head">RL workflow orchestrator</text>
+ <text x="84" y="218" class="body">Decides what happens next; it does not define the Qwen model and does not directly move tensors.</text>
+ <g>
+  <rect x="84" y="245" width="185" height="40" rx="10" fill="#fff" stroke="#93c5fd"/><text x="177" y="271" class="tag center" fill="#1d4ed8">① GSM8K batch</text>
+  <rect x="289" y="245" width="185" height="40" rx="10" fill="#fff" stroke="#93c5fd"/><text x="382" y="271" class="tag center" fill="#1d4ed8">② Rollout</text>
+  <rect x="494" y="245" width="205" height="40" rx="10" fill="#fff" stroke="#93c5fd"/><text x="597" y="271" class="tag center" fill="#1d4ed8">③ Reward</text>
+  <rect x="719" y="245" width="245" height="40" rx="10" fill="#fff" stroke="#93c5fd"/><text x="842" y="271" class="tag center" fill="#1d4ed8">④ Actor / Ref log-prob</text>
+  <rect x="984" y="245" width="205" height="40" rx="10" fill="#fff" stroke="#93c5fd"/><text x="1087" y="271" class="tag center" fill="#1d4ed8">⑤ GRPO loss</text>
+  <rect x="1209" y="245" width="205" height="40" rx="10" fill="#fff" stroke="#93c5fd"/><text x="1312" y="271" class="tag center" fill="#1d4ed8">⑥ Actor update</text>
+ </g>
+ <path d="M269 265h20M474 265h20M699 265h20M964 265h20M1189 265h20" class="arrow"/>
+
+ <!-- VERL calls models -->
+ <path d="M750 305v60" class="arrow"/><rect x="665" y="324" width="170" height="30" rx="15" fill="#26374a"/><text x="750" y="345" class="tag center" style="fill:white">calls model tasks</text>
+
+ <!-- HF model layer -->
+ <g filter="url(#shadow)"><rect x="58" y="365" width="845" height="295" rx="22" fill="#fff8dc" stroke="#f3b800" stroke-width="3"/></g>
+ <rect x="84" y="388" width="270" height="40" rx="20" fill="#f3b800"/><text x="219" y="415" class="role center">Hugging Face</text>
+ <text x="380" y="415" class="head">Qwen model implementation</text>
+ <text x="84" y="456" class="body">Provides the tokenizer and the actual neural-network computations.</text>
+ <g>
+  <rect x="86" y="488" width="370" height="135" rx="17" fill="#fff" stroke="#f7cd54" stroke-width="2"/>
+  <text x="271" y="523" class="head center">Actor Qwen</text>
+  <text x="271" y="552" class="body center">generates responses · computes log-prob</text>
+  <text x="271" y="580" class="body center">forward · backward · updated by AdamW</text>
+  <rect x="169" y="594" width="204" height="24" rx="12" fill="#dcfce7"/><text x="271" y="611" class="tag center" fill="#15803d">TRAINABLE</text>
+  <rect x="490" y="488" width="370" height="135" rx="17" fill="#fff" stroke="#f7cd54" stroke-width="2"/>
+  <text x="675" y="523" class="head center">Reference Qwen</text>
+  <text x="675" y="552" class="body center">computes reference log-prob</text>
+  <text x="675" y="580" class="body center">provides the KL baseline</text>
+  <rect x="573" y="594" width="204" height="24" rx="12" fill="#ede9fe"/><text x="675" y="611" class="tag center" fill="#6d28d9">FROZEN</text>
+ </g>
+
+ <!-- FSDP wraps -->
+ <path d="M903 512h65" class="arrow"/>
+
+ <!-- FSDP layer -->
+ <g filter="url(#shadow)"><rect x="968" y="365" width="474" height="295" rx="22" fill="#f4efff" stroke="#7c3aed" stroke-width="3"/></g>
+ <rect x="994" y="388" width="210" height="40" rx="20" fill="#7c3aed"/><text x="1099" y="415" class="role center" style="fill:white">PyTorch FSDP</text>
+ <text x="994" y="458" class="body">Memory and training-state manager</text>
+ <rect x="994" y="486" width="422" height="137" rx="17" fill="#fff" stroke="#c4b5fd" stroke-width="2"/>
+ <text x="1020" y="517" class="tag" fill="#6d28d9">MANAGES</text>
+ <text x="1020" y="548" class="body">• Actor / Reference parameters</text>
+ <text x="1020" y="576" class="body">• gradients and optimizer state</text>
+ <text x="1020" y="604" class="body">• CPU ↔ GPU load and offload timing</text>
+
+ <!-- hardware lower layer -->
+ <path d="M1205 660v54" class="arrow"/><rect x="1115" y="671" width="180" height="28" rx="14" fill="#26374a"/><text x="1205" y="691" class="tag center" style="fill:white">places tensors</text>
+ <g filter="url(#shadow)"><rect x="58" y="714" width="1384" height="142" rx="22" fill="#f8fafc" stroke="#64748b" stroke-width="3"/></g>
+ <text x="84" y="749" class="head">Physical memory</text>
+ <rect x="292" y="738" width="480" height="93" rx="17" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+ <text x="532" y="773" class="head center" fill="#1d4ed8">GPU · fast, limited workspace</text>
+ <text x="532" y="805" class="body center">only the state needed by the current phase</text>
+ <rect x="932" y="738" width="480" height="93" rx="17" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+ <text x="1172" y="773" class="head center" fill="#334155">CPU RAM · slower, larger storage</text>
+ <text x="1172" y="805" class="body center">temporarily holds offloaded training state</text>
+ <path d="M772 770h160" stroke="#147d9b" stroke-width="4" fill="none" marker-end="url(#blue)"/><text x="852" y="756" class="tag center" fill="#0f766e">OFFLOAD</text>
+ <path d="M932 808H772" stroke="#7c3aed" stroke-width="4" fill="none" marker-end="url(#arrow)"/><text x="852" y="829" class="tag center" fill="#6d28d9">RELOAD</text>
+
+ <!-- key takeaway -->
+ <rect x="58" y="870" width="1384" height="25" rx="12" fill="#111827"/>
+ <text x="750" y="888" class="tag center" style="fill:white">VERL schedules the work → Hugging Face performs model math → FSDP decides where the training state lives</text>
+</svg>

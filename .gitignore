@@ -1,0 +1,49 @@
+# Virtual environments
+envs/
+.venv/
+venv/
+
+# Python caches and build artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# Download caches and models
+cache/
+models/
+.huggingface/
+.wandb/
+wandb/
+
+# Raw experiment outputs and temporary files
+outputs/
+tmp/
+
+# Checkpoints and logs
+checkpoints/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.log
+
+# Local verl copies that must not enter the parent repository
+# src/verl is intentionally not ignored because it will become a submodule.
+src/verl-phase-peak/
+src/verl-local-backup/
+
+# Secrets and machine-local configuration
+.env
+.env.*
+*.pem
+*.key
+.netrc
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

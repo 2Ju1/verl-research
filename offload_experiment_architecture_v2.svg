@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+ <defs>
+  <filter id="s"><feDropShadow dx="0" dy="3" stdDeviation="5" flood-opacity=".1"/></filter>
+  <marker id="a" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0L10 5 0 10Z" fill="#176b87"/></marker>
+  <marker id="p" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0L10 5 0 10Z" fill="#7c3aed"/></marker>
+  <style>
+   .t{font:700 32px Arial,sans-serif;fill:#111827}.st{font:500 16px Arial,sans-serif;fill:#475569}.h{font:700 23px Arial,sans-serif;fill:#111827}.m{font:700 18px Arial,sans-serif;fill:#111827}.b{font:500 15px Arial,sans-serif;fill:#334155}.sm{font:500 13px Arial,sans-serif;fill:#64748b}.tag{font:700 13px Arial,sans-serif}.c{text-anchor:middle}.arr{stroke:#176b87;stroke-width:3;fill:none;marker-end:url(#a)}
+  </style>
+ </defs>
+ <rect width="1600" height="900" fill="white"/>
+ <text x="55" y="57" class="t">System Architecture of the VERL Offloading Experiment</text>
+ <text x="55" y="86" class="st">How VERL, Hugging Face, FSDP, vLLM, GPU and CPU interact during one GRPO training step</text>
+
+ <!-- input -->
+ <g filter="url(#s)"><rect x="55" y="132" width="205" height="620" rx="22" fill="#fff" stroke="#fda4af" stroke-width="2"/></g>
+ <rect x="78" y="156" width="159" height="32" rx="16" fill="#fff1f2"/><text x="158" y="178" class="tag c" fill="#be123c">DATA LAYER</text>
+ <text x="158" y="227" class="h c">GSM8K</text>
+ <text x="158" y="252" class="sm c">Hugging Face Dataset</text>
+ <g fill="#fecdd3" stroke="#fb7185"><rect x="86" y="285" width="42" height="32" rx="7"/><rect x="137" y="285" width="42" height="32" rx="7"/><rect x="188" y="285" width="42" height="32" rx="7"/><rect x="86" y="326" width="42" height="32" rx="7"/><rect x="137" y="326" width="42" height="32" rx="7"/><rect x="188" y="326" width="42" height="32" rx="7"/></g>
+ <text x="158" y="397" class="m c">Math prompts</text><text x="158" y="422" class="b c">+ ground-truth answer</text>
+ <path d="M158 452v65" class="arr"/>
+ <rect x="82" y="531" width="152" height="71" rx="13" fill="#f8fafc" stroke="#cbd5e1"/><text x="158" y="558" class="m c">DataLoader</text><text x="158" y="582" class="sm c">prompt batches</text>
+ <rect x="80" y="639" width="156" height="72" rx="13" fill="#111827"/><text x="158" y="668" class="m c" style="fill:white">Input batch</text><text x="158" y="692" class="sm c" style="fill:#cbd5e1">to VERL trainer</text>
+
+ <!-- VERL outer -->
+ <rect x="300" y="112" width="955" height="660" rx="24" fill="#f8fbff" stroke="#60a5fa" stroke-width="3" stroke-dasharray="11 8"/>
+ <rect x="330" y="92" width="238" height="48" rx="24" fill="#2563eb"/><text x="449" y="124" class="h c" fill="white">VERL Orchestrator</text>
+ <text x="586" y="124" class="sm">Ray workers · GRPO trainer · phase scheduling</text>
+
+ <!-- GRPO phase bar -->
+ <text x="344" y="180" class="m">① One GRPO training step</text>
+ <g filter="url(#s)">
+  <rect x="344" y="202" width="194" height="72" rx="15" fill="#ecfdf5" stroke="#6ee7b7"/><text x="441" y="232" class="m c">Rollout</text><text x="441" y="255" class="sm c">generate responses</text>
+  <rect x="558" y="202" width="194" height="72" rx="15" fill="#e0f2fe" stroke="#7dd3fc"/><text x="655" y="232" class="m c">Actor log-prob</text><text x="655" y="255" class="sm c">policy scores</text>
+  <rect x="772" y="202" width="194" height="72" rx="15" fill="#f5f3ff" stroke="#c4b5fd"/><text x="869" y="232" class="m c">Reference log-prob</text><text x="869" y="255" class="sm c">KL baseline</text>
+  <rect x="986" y="202" width="226" height="72" rx="15" fill="#fff7ed" stroke="#fdba74"/><text x="1099" y="232" class="m c">Actor update</text><text x="1099" y="255" class="sm c">GRPO loss + AdamW</text>
+ </g>
+ <path d="M538 238h20" class="arr"/><path d="M752 238h20" class="arr"/><path d="M966 238h20" class="arr"/>
+
+ <!-- HF components -->
+ <rect x="330" y="316" width="895" height="185" rx="20" fill="white" stroke="#fbbf24" stroke-width="2"/>
+ <rect x="355" y="297" width="290" height="39" rx="19" fill="#fbbf24"/><text x="500" y="323" class="m c" fill="#111827">Hugging Face Model Layer</text>
+ <text x="674" y="323" class="sm">Qwen2.5-0.5B-Instruct weights and tokenizer</text>
+ <g filter="url(#s)">
+  <rect x="360" y="360" width="230" height="104" rx="16" fill="#ecfdf5" stroke="#34d399"/><text x="475" y="390" class="m c">vLLM Engine</text><text x="475" y="417" class="b c">Actor rollout</text><text x="475" y="443" class="sm c">fast autoregressive sampling</text>
+  <rect x="613" y="360" width="270" height="104" rx="16" fill="#eff6ff" stroke="#60a5fa"/><text x="748" y="390" class="m c">HF Actor Model</text><text x="748" y="417" class="b c">trainable Qwen parameters</text><text x="748" y="443" class="sm c">log-prob + gradient update</text>
+  <rect x="906" y="360" width="285" height="104" rx="16" fill="#f5f3ff" stroke="#a78bfa"/><text x="1049" y="390" class="m c">HF Reference Model</text><text x="1049" y="417" class="b c">frozen Qwen parameters</text><text x="1049" y="443" class="sm c">reference log-prob only</text>
+ </g>
+ <path d="M590 412h23" class="arr"/><text x="601" y="397" class="sm c">weights</text>
+
+ <!-- FSDP layer -->
+ <rect x="330" y="539" width="895" height="198" rx="20" fill="#fcfbff" stroke="#a78bfa" stroke-width="2"/>
+ <rect x="355" y="520" width="270" height="39" rx="19" fill="#7c3aed"/><text x="490" y="546" class="m c" fill="white">PyTorch FSDP Layer</text>
+ <text x="646" y="546" class="sm">controls parameter, optimizer and activation residency</text>
+ <text x="365" y="596" class="m">② Phase-aware state placement</text>
+ <g>
+  <rect x="365" y="619" width="385" height="85" rx="16" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/><text x="558" y="650" class="h c" fill="#1d4ed8">GPU Resident</text><text x="558" y="678" class="b c">active model state · optional Actor retention</text>
+  <rect x="822" y="619" width="370" height="85" rx="16" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/><text x="1007" y="650" class="h c" fill="#475569">CPU Offload</text><text x="1007" y="678" class="b c">inactive params · activations · optimizer state</text>
+ </g>
+ <path d="M750 642 C776 610 796 610 822 642" stroke="#176b87" stroke-width="4" fill="none" marker-end="url(#a)"/>
+ <path d="M822 683 C796 715 776 715 750 683" stroke="#7c3aed" stroke-width="4" fill="none" marker-end="url(#p)"/>
+ <text x="786" y="600" class="tag c" fill="#0f766e">OFFLOAD</text><text x="786" y="729" class="tag c" fill="#6d28d9">RELOAD</text>
+
+ <!-- Input arrows -->
+ <path d="M260 675H300" class="arr"/><path d="M441 274v42" class="arr"/><path d="M748 464v75" class="arr"/><path d="M1049 464v75" class="arr"/>
+
+ <!-- metrics -->
+ <g filter="url(#s)"><rect x="1295" y="132" width="250" height="620" rx="22" fill="#fff" stroke="#f59e0b" stroke-width="2"/></g>
+ <rect x="1320" y="156" width="200" height="32" rx="16" fill="#fef3c7"/><text x="1420" y="178" class="tag c" fill="#92400e">MEASUREMENT LAYER</text>
+ <text x="1420" y="227" class="h c">Instrumentation</text>
+ <path d="M1330 277h28l13-23 18 47 18-31 16 7h88" stroke="#f59e0b" stroke-width="4" fill="none"/>
+ <g class="b"><text x="1327" y="344">• GPU allocated / reserved</text><text x="1327" y="378">• GPU device memory</text><text x="1327" y="412">• CPU RSS / system memory</text><text x="1327" y="446">• Phase &amp; step latency</text><text x="1327" y="480">• Transfer time / volume</text><text x="1327" y="514">• Effective bandwidth</text></g>
+ <rect x="1323" y="552" width="194" height="60" rx="13" fill="#fff7ed" stroke="#fdba74"/><text x="1420" y="578" class="m c" fill="#c2410c">Feasibility</text><text x="1420" y="599" class="sm c">success / CUDA OOM</text>
+ <rect x="1323" y="635" width="194" height="76" rx="13" fill="#111827"/><text x="1420" y="662" class="m c" style="fill:white">Final comparison</text><text x="1420" y="685" class="sm c" style="fill:#cbd5e1">memory ↔ speed</text><text x="1420" y="703" class="sm c" style="fill:#cbd5e1">Pareto frontier</text>
+ <path d="M1255 441h40" class="arr"/>
+
+ <!-- bottom matrix -->
+ <rect x="55" y="800" width="1490" height="65" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+ <text x="80" y="840" class="m">Compared configurations:</text>
+ <rect x="300" y="817" width="200" height="32" rx="16" fill="#dbeafe"/><text x="400" y="838" class="tag c" fill="#1d4ed8">All-GPU baseline</text>
+ <rect x="515" y="817" width="230" height="32" rx="16" fill="#ede9fe"/><text x="630" y="838" class="tag c" fill="#6d28d9">Phase-wise offload</text>
+ <rect x="760" y="817" width="235" height="32" rx="16" fill="#dcfce7"/><text x="878" y="838" class="tag c" fill="#15803d">Actor retained on GPU</text>
+ <rect x="1010" y="817" width="220" height="32" rx="16" fill="#ffedd5"/><text x="1120" y="838" class="tag c" fill="#c2410c">CPU vs GPU AdamW</text>
+ <rect x="1245" y="817" width="270" height="32" rx="16" fill="#f1f5f9"/><text x="1380" y="838" class="tag c" fill="#334155">Activation offload on / off</text>
+</svg>
