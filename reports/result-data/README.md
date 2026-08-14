@@ -1,6 +1,6 @@
-# Final figure data manifest
+# Result data manifest
 
-최종 발표용 그림이 어떤 데이터와 스크립트에서 생성되는지 추적하기 위한 목록이다.
+연구 결과 그림이 어떤 데이터와 스크립트에서 생성되는지 추적하기 위한 목록이다.
 모든 시간은 별도 표기가 없으면 warm-up 2 training steps를 제외한 평균이며,
 메모리는 GiB이다.
 
@@ -21,8 +21,8 @@
 
 ## 2. Phase offload best vs CPU AdamW
 
-- Tracked figure: `reports/figures/final_cpu_adamw.png`, `.svg`
-- Tracked script: `reports/figures/plot_final_results.py`
+- Tracked figure: `reports/figures/result_cpu_adamw.png`, `.svg`
+- Tracked script: `reports/figures/plot_results.py`
 - Compact figure: `outputs/phase-best-vs-cpu-adamw-memory-v1/summary/phase_best_vs_cpu_adamw_compact.png`, `.pdf`
 - Full figure: `outputs/phase-best-vs-cpu-adamw-memory-v1/summary/phase_best_vs_cpu_adamw_all_phases.png`, `.pdf`
 - Script: `outputs/phase-best-vs-cpu-adamw-memory-v1/plot_phase_best_vs_cpu_adamw.py`
@@ -40,8 +40,8 @@
 
 ## 3. No-stream vs optimized 16 MiB streaming
 
-- Tracked figure: `reports/figures/final_gradient_streaming.png`, `.svg`
-- Tracked script: `reports/figures/plot_final_results.py`
+- Tracked figure: `reports/figures/result_gradient_streaming.png`, `.svg`
+- Tracked script: `reports/figures/plot_results.py`
 - Figure: `outputs/pa-repro-fp32-v1/streaming-summary/nostream_vs_16mib_optimized.png`, `.pdf`
 - Script: `outputs/pa-repro-fp32-v1/streaming-summary/plot_nostream_vs_16mib_optimized.py`
 - No-stream runs: `outputs/nostream-vs-16mib-direct-remeasure-v1/NOSTREAM-DIRECT-REMEASURE-r1..r3`
@@ -53,7 +53,7 @@
 | No-stream | 4.721 | 0.212 | 3.551 | 5.152 | 9.814 |
 | 16 MiB, 3 slots, Adam-H2D overlap | 3.402 | 0.292 | 3.020 | 3.964 | 8.629 |
 
-16 MiB 최종 설정의 핵심은 `cpu_grad_accumulation=true`와
+16 MiB optimized 설정의 핵심은 `cpu_grad_accumulation=true`와
 `overlap_h2d_with_cpu_update=true`이다.
 
 ## 4. Streaming root-cause A/B/C
@@ -66,8 +66,8 @@
   - `b-stream16-serial/B-STREAM16-SERIAL-TELEMETRY-r1`
   - `c-stream16-pipeline/C-STREAM16-PIPELINE-TELEMETRY-r1`
 
-이 데이터는 원인 분석용 telemetry run이며 최종 성능 수치로 사용하지 않는다.
-최종 성능은 위 3번의 telemetry-off 3회 측정을 사용한다.
+이 데이터는 원인 분석용 telemetry run이며 성능 수치로 사용하지 않는다.
+보고한 성능은 위 3번의 telemetry-off 3회 측정을 사용한다.
 
 ## 5. GPU Adam vs CPU Adam six phases
 
@@ -81,9 +81,9 @@
 ## Excluded/stale artifacts
 
 - `nostream_vs_16mib_optimized_legacy_residual.*`: Update를 직접 측정하지 않고
-  `timing_s/update_actor` residual로 역산한 과거 그림이므로 최종 결과에서 제외한다.
+  `timing_s/update_actor` residual로 역산한 과거 그림이므로 결과에서 제외한다.
 - `nostream-vs-16mib-direct-remeasure-v1`의 streaming run은 Adam-H2D overlap이 꺼진
-  진단 대조군이다. 최종 streaming 성능에는 사용하지 않는다.
+  진단 대조군이다. overlap-enabled streaming 성능에는 사용하지 않는다.
 - Nsight 및 JSON telemetry run의 wall time은 계측 오버헤드가 있으므로 성능 막대에 사용하지 않는다.
 
 ## Reproduction
@@ -92,17 +92,17 @@
 Matplotlib cache 권한 경고를 피하려면 다음처럼 실행한다.
 
 ```bash
-MPLCONFIGDIR=/tmp/verl-final-figures \
+MPLCONFIGDIR=/tmp/verl-result-figures \
   envs/verl-titan/bin/python <plot-script>
 ```
 
-## Slide figures shown in the final deck
+## Result figures and source runs
 
-아래는 최종 슬라이드에 사용한 네 그림과 실제 실험 결과 디렉터리의 일대일 대응이다.
+아래는 네 핵심 결과 그림과 실제 실험 결과 디렉터리의 일대일 대응이다.
 
 ### A. Phase offload GPU AdamW vs Phase offload + CPU AdamW
 
-- Slide figure:
+- Original local figure:
   `outputs/phase-best-vs-cpu-adamw-memory-v1/summary/phase_best_vs_cpu_adamw.png`
 - Current compact figure:
   `outputs/phase-best-vs-cpu-adamw-memory-v1/summary/phase_best_vs_cpu_adamw_compact.png`
@@ -125,7 +125,7 @@ MPLCONFIGDIR=/tmp/verl-final-figures \
 
 ### B. All on GPU vs Phase offload phase memory
 
-- Slide figure: `reports/figures/allgpu_vs_phase_offload_05b.png`
+- Tracked figure: `reports/figures/allgpu_vs_phase_offload_05b.png`
 - Vector figure: `reports/figures/allgpu_vs_phase_offload_05b.svg`
 - Plot script: `reports/figures/plot_allgpu_vs_phase_offload.py`
 - Aggregated result directory:
@@ -142,7 +142,7 @@ MPLCONFIGDIR=/tmp/verl-final-figures \
 
 ### C. No-stream vs optimized 16 MiB streaming
 
-- Slide figure:
+- Original local figure:
   `outputs/pa-repro-fp32-v1/streaming-summary/nostream_vs_16mib_optimized.png`
 - PDF:
   `outputs/pa-repro-fp32-v1/streaming-summary/nostream_vs_16mib_optimized.pdf`
@@ -152,21 +152,21 @@ MPLCONFIGDIR=/tmp/verl-final-figures \
   - `outputs/nostream-vs-16mib-direct-remeasure-v1/NOSTREAM-DIRECT-REMEASURE-r1`
   - `outputs/nostream-vs-16mib-direct-remeasure-v1/NOSTREAM-DIRECT-REMEASURE-r2`
   - `outputs/nostream-vs-16mib-direct-remeasure-v1/NOSTREAM-DIRECT-REMEASURE-r3`
-- Final 16 MiB overlap results:
+- Optimized 16 MiB overlap results:
   - `outputs/stream16-pipeline-performance-3x-gpu1-v1/STREAM16-S3-PIPELINE-PERF-r1`
   - `outputs/stream16-pipeline-performance-3x-gpu1-v1/STREAM16-S3-PIPELINE-PERF-r2`
   - `outputs/stream16-pipeline-performance-3x-gpu1-v1/STREAM16-S3-PIPELINE-PERF-r3`
 - Main values: backward peak 4.72→3.40 GiB, backward time 0.21→0.29 s,
   Update time 3.55→3.02 s.
-- Do not use for the final bar:
+- Excluded serial-H2D comparison:
   `outputs/nostream-vs-16mib-direct-remeasure-v1/STREAM16-S3-DIRECT-REMEASURE-r*`.
   이 streaming 대조군은 Adam-H2D overlap이 꺼져 있다.
 
 ### D. Qwen2.5-1.5B FP32 capacity
 
-- Tracked figure: `reports/figures/final_qwen15b_capacity.png`, `.svg`
-- Tracked script: `reports/figures/plot_final_results.py`
-- Slide figure:
+- Tracked figure: `reports/figures/result_qwen15b_capacity.png`, `.svg`
+- Tracked script: `reports/figures/plot_results.py`
+- Original local figure:
   `outputs/pa-capacity-fp32-qwen15b-bucket-sweep-v1/summary/qwen15b_fp32_capacity.png`
 - PDF:
   `outputs/pa-capacity-fp32-qwen15b-bucket-sweep-v1/summary/qwen15b_fp32_capacity.pdf`
@@ -191,13 +191,13 @@ MPLCONFIGDIR=/tmp/verl-final-figures \
 ### E. Qwen2.5-0.5B bucket-size sweep
 
 - Raw result root: `outputs/pa-optimized-bucket-sweep-v1`
-- Matrix: `reports/final-figure-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json`
+- Matrix: `reports/result-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json`
 - Buckets: 16, 32, 64, 128, 256, 512 MiB
 - Repeats: 각 bucket마다 r1, r2, r3
 - Run IDs: `STREAM-OPT-B{16,32,64,128,256,512}-r{1,2,3}`
-- Collected copy: `reports/final-figure-data/collected/05_bucket_size_sweep_05b`
+- Collected copy: `reports/result-data/collected/05_bucket_size_sweep_05b`
 - Common settings: 3 staging slots, async D2H, early gradient release,
   reusable GPU packing buffers, direct CPU gradient buffers.
 - Important limitation: 이 sweep은 `overlap_h2d_with_cpu_update=false`로 수행됐다.
   즉 bucket 크기에 따른 D2H/backward memory trade-off를 비교하는 과거 sweep이며,
-  최종 16 MiB Adam-H2D overlap 성능 실험은 아니다.
+  overlap-enabled 16 MiB 성능 실험은 아니다.

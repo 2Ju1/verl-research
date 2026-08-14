@@ -9,7 +9,7 @@
 1. `EXPERIMENT_HISTORY.md`
    - 시행착오의 시간적·논리적 흐름
    - 각 실험의 목적, 결과, 잘못된 가설, 측정 오류, 수정 내용
-   - 최종 채택 데이터와 폐기/대체 데이터의 구분
+   - 채택 데이터와 폐기/대체 데이터의 구분
 2. `GROUP_CATALOG.md`
    - 95개 output group과 그 아래 512개 run의 전수 목록
    - 각 run의 상태, 핵심 설정, 시간 및 메모리 metric
@@ -27,7 +27,7 @@
 - 실패/OOM은 성능 평균에서 제외하되 실패 자체가 결론인 경우 증거로 기록했다.
 - detail/telemetry/Nsight 계측값과 telemetry-off 성능값을 구분했다.
 - phase-local allocated peak, reserved peak, device-used memory를 혼합하지 않았다.
-- residual로 역산한 과거 Optimize 시간은 최종 수치에서 제외했다.
+- residual로 역산한 과거 Optimize 시간은 보고 수치에서 제외했다.
 - 16–512 MiB 과거 sweep은 Adam–H2D overlap이 꺼진 상태임을 명시했다.
 - 아직 끝나지 않은 Nsight 원인 분해는 완료된 결론처럼 기록하지 않았다.
 
@@ -37,16 +37,15 @@
 
 ```bash
 envs/verl-titan/bin/python \
-  reports/final-figure-data/build_experiment_inventory.py
+  reports/result-data/build_experiment_inventory.py
 ```
 
 재생성기는 `outputs/**/run.json`, `result.json`, stdout 및 aggregate 결과를 읽어
 run/group 원장을 갱신한다. 사람이 해석한 연대기인 `EXPERIMENT_HISTORY.md`는
 자동으로 덮어쓰지 않는다.
 
-## 관련 최종 데이터 묶음
+## 관련 결과 데이터 묶음
 
-- 최종 그림별 출처: `../README.md`
-- 최종 그림 데이터 manifest: `../manifest.csv`
+- 결과 그림별 출처: `../README.md`
+- 결과 그림 데이터 manifest: `../manifest.csv`
 - 필요한 원본만 모은 사본: `../collected/`
-

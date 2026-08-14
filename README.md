@@ -30,10 +30,10 @@ and parameter reload.
 
 ## Main results
 
-Unless noted otherwise, the final comparison uses Qwen2.5-0.5B-Instruct,
+Unless noted otherwise, the reference comparison uses Qwen2.5-0.5B-Instruct,
 full-parameter FP32 training, GSM8K, one NVIDIA TITAN Xp with 11.90 GiB usable
 capacity, two warm-up steps, and three repeated runs. The GPU/CPU AdamW runs
-measure 30 of 32 training steps; the final streaming runs measure 28 of 30.
+measure 30 of 32 training steps; the optimized streaming runs measure 28 of 30.
 Performance bars use telemetry-off runs and memory bars use corrected
 phase-local peaks.
 
@@ -56,7 +56,7 @@ CPU AdamW eliminates the GPU optimizer-state peak, but a serial CPU update is
 much slower. This result isolates memory placement from the later streaming and
 overlap optimizations.
 
-![CPU AdamW result](reports/figures/final_cpu_adamw.png)
+![CPU AdamW result](reports/figures/result_cpu_adamw.png)
 
 ### 3. Optimized gradient streaming lowers memory and total update time
 
@@ -70,9 +70,9 @@ end-to-end step by **1.186 s (12.1%)**. Backward itself becomes about 80 ms
 slower because hooks, packing, D2H traffic, and staging-slot backpressure run on
 its critical path; the pipelined Update more than recovers that cost.
 
-![Gradient streaming result](reports/figures/final_gradient_streaming.png)
+![Gradient streaming result](reports/figures/result_gradient_streaming.png)
 
-The final streaming setting is:
+The optimized streaming setting is:
 
 ```text
 bucket size                 16 MiB
@@ -88,10 +88,10 @@ Adam–parameter H2D overlap  enabled
 ### 4. Capacity result on Qwen2.5-1.5B
 
 All-GPU and CPU-Adam-without-streaming runs reached OOM on the 11.90 GiB GPU.
-CPU Adam plus gradient streaming completed, with a presentation phase peak of
+CPU Adam plus gradient streaming completed, with a phase-local peak of
 **8.44 GiB** (the direct performance metric is approximately 8.377 GiB).
 
-![Qwen2.5-1.5B capacity result](reports/figures/final_qwen15b_capacity.png)
+![Qwen2.5-1.5B capacity result](reports/figures/result_qwen15b_capacity.png)
 
 ## Method
 
@@ -118,7 +118,7 @@ The implementation exploits this schedule in three layers:
 The detailed design, controls, measurement boundaries, commands, and known
 limitations are in [Experiment guide](docs/EXPERIMENTS.md). The complete
 trial-and-error history is in
-[Experiment history](reports/final-figure-data/experiment-history/EXPERIMENT_HISTORY.md).
+[Experiment history](reports/result-data/experiment-history/EXPERIMENT_HISTORY.md).
 
 ## Reproduce
 
@@ -162,14 +162,14 @@ is written under `outputs/`, which is intentionally ignored by Git.
 # Historical 16--512 MiB bucket sweep (Adam--H2D overlap was OFF)
 .venv/bin/python \
   src/verl/benchmarks/offload/run_matrix.py \
-  --matrix reports/final-figure-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json \
+  --matrix reports/result-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json \
   --output outputs/pa-optimized-bucket-sweep-v1 \
   --repeats 3 --warmup-steps 2
 ```
 
-Machine-specific paths and the final overlap-enabled pipeline procedure are
+Machine-specific paths and the overlap-enabled pipeline procedure are
 documented in [Experiment guide](docs/EXPERIMENTS.md). Do not compare the
-historical bucket sweep's Update time directly with the final overlap-enabled
+historical bucket sweep's Update time directly with the overlap-enabled
 16 MiB result.
 
 ## Repository map
@@ -181,21 +181,19 @@ data/gsm8k/                   Small benchmark dataset
 docs/EXPERIMENTS.md           Experimental design and reproduction guide
 reports/                      Technical reports and plotting scripts
 reports/figures/              Publication-ready figures
-reports/final-figure-data/    Curated final data and provenance manifest
-  collected/                  Minimal raw evidence for final figures
+reports/result-data/          Curated result data and provenance manifest
+  collected/                  Minimal raw evidence for result figures
   experiment-history/         512-run inventory and trial-and-error record
 ```
 
 Start with these artifacts:
 
 - [Experiment guide](docs/EXPERIMENTS.md)
-- [Final Korean study report](reports/FINAL_STUDY_REPORT_KO.md)
-- [Corrected Korean presentation script](reports/FINAL_PRESENTATION_SCRIPT_KO.md)
-- [Presentation consistency audit](reports/PRESENTATION_AUDIT.md)
-- [Final-figure data manifest](reports/final-figure-data/README.md)
-- [Full experiment history](reports/final-figure-data/experiment-history/EXPERIMENT_HISTORY.md)
-- [All 512 runs (CSV)](reports/final-figure-data/experiment-history/all_runs.csv)
-- [All 95 output groups](reports/final-figure-data/experiment-history/GROUP_CATALOG.md)
+- [Korean study report](reports/STUDY_REPORT_KO.md)
+- [Result-data manifest](reports/result-data/README.md)
+- [Full experiment history](reports/result-data/experiment-history/EXPERIMENT_HISTORY.md)
+- [All 512 runs (CSV)](reports/result-data/experiment-history/all_runs.csv)
+- [All 95 output groups](reports/result-data/experiment-history/GROUP_CATALOG.md)
 
 ## Data interpretation rules
 
@@ -203,7 +201,7 @@ Start with these artifacts:
   different metrics and are never merged into one bar.
 - OOM runs are capacity evidence, not samples in performance averages.
 - `--detail`, transfer telemetry, synchronization, and Nsight perturb runtime;
-  final performance comes from telemetry-off repetitions.
+  reported performance comes from telemetry-off repetitions.
 - Update time is read from the direct Adam/update timer. The obsolete residual
   estimate (`actor update - forward - backward`) is excluded.
 - The 16--512 MiB sweep predates Adam–H2D overlap and is diagnostic only.

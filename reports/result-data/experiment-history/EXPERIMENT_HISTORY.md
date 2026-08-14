@@ -12,17 +12,17 @@
 - `all_runs.json`: 같은 내용을 JSON으로 보존
 - `output_groups.csv`: 95개 실험군의 성공/실패/미완료 수와 실행 시각
 - `GROUP_CATALOG.md`: 모든 실험군과 개별 run의 표
-- 생성기: `reports/final-figure-data/build_experiment_inventory.py`
+- 생성기: `reports/result-data/build_experiment_inventory.py`
 
 이 문서의 판정 표기:
 
-- **최종 사용**: 최종 슬라이드/그래프에 사용한 데이터
-- **유효 진단**: 원인 규명에는 유효하지만 최종 성능 수치에는 사용하지 않음
+- **채택 결과**: 연구 결과 그래프에 사용한 데이터
+- **유효 진단**: 원인 규명에는 유효하지만 보고 성능 수치에는 사용하지 않음
 - **폐기/대체**: 설정 오류, 측정 경계 오류, 실패, 또는 더 정확한 후속 실험으로 대체
 - **실패가 결과**: OOM이나 기능 실패 자체가 capacity/호환성 결론의 증거
 
 JSON telemetry, `--detail`, `--sync`, Nsight는 실행 시간을 교란할 수 있다.
-따라서 원인 분석용 trace와 최종 telemetry-off 성능 수치를 구분한다.
+따라서 원인 분석용 trace와 telemetry-off 성능 수치를 구분한다.
 
 ## 1. 초기 offload 조합 탐색: full fine-tuning matrix
 
@@ -158,7 +158,7 @@ JSON telemetry, `--detail`, `--sync`, Nsight는 실행 시간을 교란할 수 �
 
 - 48 runs: 성공 42, 실패 6
 - FP32 조건에서 placement와 streaming 후보를 재현했다.
-- 과거 placement 2×3 진단 그림의 주요 집계 원천이었다. 해당 그림은 최종 발표
+- 과거 placement 2×3 진단 그림의 주요 집계 원천이었다. 해당 그림은 핵심 결과
   흐름에서 제외했지만 raw run은 역사 자료로 보존한다.
 - 실패 6개는 catalog에서 개별 설정을 확인해야 하며 평균에 포함하지 않는다.
 
@@ -333,7 +333,7 @@ JSON telemetry, `--detail`, `--sync`, Nsight는 실행 시간을 교란할 수 �
 - `pa-final-qwen15b-best-v1`: 실패 1
 - `pa-capacity-fp32-qwen15b-v1`: 5 runs 중 성공 3, 실패 2
 - All-GPU와 CPU Adam no-stream은 OOM, CPU Adam + streaming 3회는 성공했다.
-- 성공 streaming stdout peak는 약 8.377 GiB이며 presentation 그림은 detail/phase peak 8.44 GiB를 사용했다.
+- 성공 streaming stdout peak는 약 8.377 GiB이며 결과 그림은 detail/phase peak 8.44 GiB를 사용했다.
 
 ### 12.2 no-stream OOM snapshot
 
@@ -357,10 +357,10 @@ JSON telemetry, `--detail`, `--sync`, Nsight는 실행 시간을 교란할 수 �
 3. No-stream vs 16 MiB: no-stream direct remeasure + `stream16-pipeline-performance-3x-gpu1-v1`
 4. 1.5B capacity: All-GPU OOM + no-stream OOM snapshot-v2 + CPU-BEST r1..r3
 
-Placement Pareto와 2×3 placement matrix는 유효한 중간 진단이지만 2026-08-14
-최종 발표의 주장 구조에는 사용하지 않아 final figure 목록에서 제외했다.
+Placement Pareto와 2×3 placement matrix는 유효한 중간 진단이지만 핵심 주장
+구조에는 사용하지 않아 result figure 목록에서 제외했다.
 
-정확한 파일 경로는 상위 `../README.md`의 “Slide figures shown in the final deck”와
+정확한 파일 경로는 상위 `../README.md`의 “Result figures and source runs”와
 `../manifest.csv`에 기록돼 있다.
 
 ## 14. 재현 및 데이터 해석 규칙

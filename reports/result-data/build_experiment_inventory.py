@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path("/mnt/sda/juwon/verl-research")
 OUTPUTS = ROOT / "outputs"
-DEST = ROOT / "reports/final-figure-data/experiment-history"
+DEST = ROOT / "reports/result-data/experiment-history"
 DEST.mkdir(parents=True, exist_ok=True)
 
 METRICS = [

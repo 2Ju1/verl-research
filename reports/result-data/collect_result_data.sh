@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT=/mnt/sda/juwon/verl-research
-DEST="$ROOT/reports/final-figure-data/collected"
+DEST="$ROOT/reports/result-data/collected"
 
 mkdir -p \
   "$DEST/01_phase_offload_vs_cpu_adamw/performance" \
@@ -73,4 +73,4 @@ done
 cp -p "$ROOT/tmp/optimized_bucket_sweep.json" \
   "$DEST/05_bucket_size_sweep_05b/optimized_bucket_sweep.json"
 
-cp -p "$ROOT/reports/final-figure-data/manifest.csv" "$DEST/manifest.csv"
+cp -p "$ROOT/reports/result-data/manifest.csv" "$DEST/manifest.csv"

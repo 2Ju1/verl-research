@@ -1,10 +1,10 @@
 # Experiment Design and Reproduction Guide
 
-This document explains how the final study was constructed, how intermediate
+This document explains how the study was constructed, how intermediate
 results should be interpreted, and how to reproduce the main comparisons. It
 is intentionally more operational than the root README. For the complete
 chronology of all 95 experiment groups and 512 runs, see the
-[full experiment history](../reports/final-figure-data/experiment-history/EXPERIMENT_HISTORY.md).
+[full experiment history](../reports/result-data/experiment-history/EXPERIMENT_HISTORY.md).
 
 ## 1. Research objectives
 
@@ -32,7 +32,7 @@ levels or optimizer boundaries are not mixed.
 | Update | AdamW and parameter reload | optimizer state or CPU/H2D pipeline |
 
 The phase-offload schedule removes the inactive model before loading the model
-needed by the next phase. The final CPU path retains FP32 master parameters and
+needed by the next phase. The CPU path retains FP32 master parameters and
 Adam states on host memory.
 
 ## 3. Implementation progression
@@ -47,7 +47,7 @@ activation placement. These runs established two points:
   must be loaded back for GPU AdamW.
 
 The older matrix analysis remains traceable in the complete experiment-history
-inventory, but it is not presented as the final study result.
+inventory, but it is not presented as a primary study result.
 
 ### 3.2 Phase-local measurement correction
 
@@ -61,7 +61,7 @@ Consequences:
 - old Update bars that still contained gradients are not optimizer-only peaks;
 - phase-local `allocated` values must not be replaced with allocator `reserved`
   or `nvidia-smi` device-used values;
-- final figures use the corrected phase boundary.
+- result figures use the corrected phase boundary.
 
 ### 3.3 CPU AdamW isolation
 
@@ -91,14 +91,14 @@ streaming buffers out of earlier phases.
 ### 3.5 Slot and bucket tuning
 
 Quick 64/128 MiB tests were followed by direct-buffer and slot experiments.
-Three slots were selected for the final 16 MiB pipeline because they balance
+Three slots were selected for the 16 MiB pipeline because they balance
 producer progress and bounded pinned memory under that bucket layout. It is not
 a universal optimum independent of bucket size or hardware.
 
 The available 0.5B sweep covers 16, 32, 64, 128, 256, and 512 MiB with three
 runs each. It is useful for backward/memory trends, but its
 `overlap_h2d_with_cpu_update` setting is **false**. It cannot establish the
-optimal bucket for the final overlap-enabled pipeline.
+optimal bucket for the overlap-enabled pipeline.
 
 ### 3.6 Adam–H2D overlap root cause
 
@@ -113,12 +113,12 @@ The controlled A/B/C sequence used:
 - C: 16 MiB stream, bucket CPU Adam plus H2D overlap.
 
 On the same GPU with diagnostic telemetry, Update was 3.579, 3.716, and 3.407
-seconds respectively. Final telemetry-off repetitions reduced the optimized
+seconds respectively. Telemetry-off repetitions reduced the optimized
 16 MiB Update to 3.020 seconds.
 
 ### 3.7 Backward overhead
 
-The final stream increases backward from 0.212 to 0.292 seconds. Recorded
+The optimized stream increases backward from 0.212 to 0.292 seconds. Recorded
 evidence includes approximately 41 ms/step of staging-slot backpressure and
 about 154 ms of total D2H CUDA activity that overlaps other work. The remainder
 is consistent with hook dispatch, packing, event/stream enqueue, early release,
@@ -138,7 +138,7 @@ the remaining overhead.
 - exclude warm-up steps;
 - use direct `perf/actor_backward_total_wall_s` and
   `perf/actor_adam_step_total_wall_s` metrics;
-- repeat the final comparison three times.
+- repeat the reported comparison three times.
 
 ### Memory runs
 
@@ -212,7 +212,7 @@ known reproducibility limitation, not an interchangeable path alias.
 ```bash
 CUDA_VISIBLE_DEVICES=0 .venv/bin/python \
   src/verl/benchmarks/offload/run_matrix.py \
-  --matrix reports/final-figure-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json \
+  --matrix reports/result-data/collected/05_bucket_size_sweep_05b/optimized_bucket_sweep.json \
   --output outputs/pa-optimized-bucket-sweep-v1 \
   --repeats 3 \
   --warmup-steps 2
@@ -228,7 +228,7 @@ After new runs are added under `outputs/`:
 
 ```bash
 .venv/bin/python \
-  reports/final-figure-data/build_experiment_inventory.py
+  reports/result-data/build_experiment_inventory.py
 ```
 
 This updates the run/group machine-readable indexes. It does not overwrite the
@@ -237,38 +237,38 @@ human-authored experiment history.
 ### 6.4 Regenerate tracked figures
 
 ```bash
-MPLCONFIGDIR=/tmp/verl-final-figures \
+MPLCONFIGDIR=/tmp/verl-result-figures \
   .venv/bin/python reports/figures/plot_allgpu_vs_phase_offload.py
 
-MPLCONFIGDIR=/tmp/verl-final-figures \
-  .venv/bin/python reports/figures/plot_final_results.py
+MPLCONFIGDIR=/tmp/verl-result-figures \
+  .venv/bin/python reports/figures/plot_results.py
 ```
 
 Figure-specific raw inputs and plotting scripts are listed in the
-[final-figure manifest](../reports/final-figure-data/README.md).
+[result-data manifest](../reports/result-data/README.md).
 
 ## 7. Evidence map
 
 | Claim | Primary tracked evidence |
 |---|---|
-| Six-phase placement memory | `reports/final-figure-data/collected/02_allgpu_vs_phase_offload/` |
-| GPU versus CPU AdamW | `reports/final-figure-data/collected/01_phase_offload_vs_cpu_adamw/` |
-| Final no-stream versus 16 MiB | `reports/final-figure-data/collected/03_nostream_vs_stream16/` |
-| 1.5B OOM/success boundary | `reports/final-figure-data/collected/04_qwen15b_capacity/` |
-| 0.5B bucket sweep | `reports/final-figure-data/collected/05_bucket_size_sweep_05b/` |
-| Figure provenance | `reports/final-figure-data/manifest.csv` |
-| Every local run | `reports/final-figure-data/experiment-history/all_runs.csv` |
-| Trial-and-error chronology | `reports/final-figure-data/experiment-history/EXPERIMENT_HISTORY.md` |
+| Six-phase placement memory | `reports/result-data/collected/02_allgpu_vs_phase_offload/` |
+| GPU versus CPU AdamW | `reports/result-data/collected/01_phase_offload_vs_cpu_adamw/` |
+| No-stream versus optimized 16 MiB | `reports/result-data/collected/03_nostream_vs_stream16/` |
+| 1.5B OOM/success boundary | `reports/result-data/collected/04_qwen15b_capacity/` |
+| 0.5B bucket sweep | `reports/result-data/collected/05_bucket_size_sweep_05b/` |
+| Figure provenance | `reports/result-data/manifest.csv` |
+| Every local run | `reports/result-data/experiment-history/all_runs.csv` |
+| Trial-and-error chronology | `reports/result-data/experiment-history/EXPERIMENT_HISTORY.md` |
 
 ## 8. Known limitations
 
 - The primary study uses one GPU model and small batch/sequence settings.
-- The final 16--512 MiB sweep with Adam–H2D overlap enabled has not been run.
+- The 16--512 MiB sweep with Adam–H2D overlap enabled has not been run.
 - The exact remaining backward overhead lacks a completed paired Nsight trace.
 - Some early reports use FP16 or older allocator configurations; their results
-  are historical diagnostics, not replacements for the final FP32 comparison.
+  are historical diagnostics, not replacements for the reported FP32 comparison.
 - The corrected memory-only runner lived in a separate local worktree; its
   curated results are tracked, but that worktree path is not portable.
 
 These limitations are also recorded in the experiment history so that an
-incomplete diagnostic cannot silently become a final performance claim.
+incomplete diagnostic cannot silently become a reported performance claim.

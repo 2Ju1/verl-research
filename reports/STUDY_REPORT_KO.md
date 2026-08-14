@@ -13,7 +13,7 @@ activation이 서로 다른 시점에 생성되고 사용된다.
 > lifetime을 GRPO phase에 맞춰 관리하면 full-parameter RL 학습을 단일 소형
 > GPU에서 실행할 수 있는가?
 
-최종 목표는 단순히 어떤 phase의 memory를 줄이는 것이 아니라, 전체 training
+연구 목표는 단순히 어떤 phase의 memory를 줄이는 것이 아니라, 전체 training
 step에서 가장 큰 peak를 만드는 원인을 순서대로 제거하는 것이다.
 
 ## 2. 배경: GRPO training step의 phase
@@ -69,16 +69,16 @@ GPU에 배치하면 GPU residency를 줄일 수 있지만 CPU–GPU transfer 비
 | Prompt/response 제한 | 128/64 tokens |
 | Compute/rollout dtype | FP32/float32 |
 | PPO micro-batch/GPU | 4 |
-| 반복 | 최종 성능 비교 구성별 3회 |
+| 반복 | 성능 비교 구성별 3회 |
 
-실행 길이는 최종 실험 묶음에 따라 다르다.
+실행 길이는 실험 묶음에 따라 다르다.
 
 - GPU AdamW 대 CPU AdamW: 총 32 training steps, warm-up 2개 제외, 30개 측정
-- no-stream 대 최종 16 MiB streaming: 총 30 training steps, warm-up 2개 제외,
+- no-stream 대 optimized 16 MiB streaming: 총 30 training steps, warm-up 2개 제외,
   28개 측정
 - 1.5B 성공 run: 총 32 training steps, warm-up 2개 제외, 30개 측정
 
-따라서 모든 최종 실험이 32 steps라는 단일 조건으로 실행됐다고 쓰지 않는다.
+따라서 모든 실험이 32 steps라는 단일 조건으로 실행됐다고 쓰지 않는다.
 각 run의 실제 측정 개수는 `all_runs.csv`의 `metric_steps`가 기준이다.
 
 ## 5. 실험 1: Phase offloading
@@ -149,7 +149,7 @@ GPU에 보관한 뒤, backward가 끝난 후 전체 gradient를 CPU로 보낸다
 GPU에 동시에 존재하는 것을 피할 수 있다. 이는 ZeRO-Offload의 gradient
 offloading 아이디어를 GRPO의 phase-aware 실행 경로에 적용한 것이다.
 
-최종 0.5B 설정은 다음과 같다.
+채택한 0.5B 설정은 다음과 같다.
 
 ```text
 bucket size                 16 MiB
@@ -179,13 +179,11 @@ Backward time은 hook 호출, gradient packing, D2H enqueue, CUDA event 관리,
 조기 release와 memory-bandwidth 경쟁 때문에 증가한다. 기록된 staging-slot
 backpressure는 약 41 ms/training step이다.
 
-반면 최종 경로는 gradient를 미리 CPU에 준비하고, CPU Adam bucket update와
+반면 optimized 경로는 gradient를 미리 CPU에 준비하고, CPU Adam bucket update와
 updated parameter H2D를 overlap한다. 이 때문에 Update 감소가 backward 증가를
 상쇄하고 전체 training step도 짧아진다.
 
-발표 PDF 22번 slide의 “only 1.7% end-to-end overhead” 문구는 같은 slide의
-막대 및 최종 raw data와 맞지 않는다. 최종 데이터 기준 결론은 **overhead가
-아니라 12.1% training-step 단축**이다.
+측정 결과의 결론은 overhead 증가가 아니라 **12.1% training-step 단축**이다.
 
 ## 8. 실험 4: Qwen2.5-1.5B capacity
 
@@ -215,7 +213,7 @@ Gradient streaming은 backward 중 full-gradient residency를 제한하고, CPU
 AdamW는 Update의 optimizer-state residency를 제거한다. 두 기법은 서로 다른
 peak 원인을 해결하므로 함께 적용했을 때만 1.5B training이 성공했다.
 
-## 9. 최종 결론
+## 9. 결론
 
 1. Phase offloading은 현재 phase에서 사용하지 않는 Actor, Reference와 optimizer
    state의 불필요한 GPU residency를 제거한다.
@@ -231,11 +229,11 @@ peak 원인을 해결하므로 함께 적용했을 때만 1.5B training이 성�
 
 ## 10. 증거와 재현 경로
 
-- 최종 figure provenance: `reports/final-figure-data/README.md`
-- 최종 raw data 사본: `reports/final-figure-data/collected/`
-- 전체 512-run 원장: `reports/final-figure-data/experiment-history/all_runs.csv`
-- 전체 시행착오: `reports/final-figure-data/experiment-history/EXPERIMENT_HISTORY.md`
+- Figure provenance: `reports/result-data/README.md`
+- Curated raw data 사본: `reports/result-data/collected/`
+- 전체 512-run 원장: `reports/result-data/experiment-history/all_runs.csv`
+- 전체 시행착오: `reports/result-data/experiment-history/EXPERIMENT_HISTORY.md`
 - 실행 방법과 측정 규칙: `docs/EXPERIMENTS.md`
 
-최종 performance 수치는 telemetry/detail/Nsight를 끈 반복 run에서 읽고,
+보고한 performance 수치는 telemetry/detail/Nsight를 끈 반복 run에서 읽고,
 memory 수치는 phase 시작 시 peak reset이 적용된 memory run에서 읽는다.
