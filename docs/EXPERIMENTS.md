@@ -2,9 +2,7 @@
 
 This document explains how the study was constructed, how intermediate
 results should be interpreted, and how to reproduce the main comparisons. It
-is intentionally more operational than the root README. For the complete
-chronology of all 95 experiment groups and 512 runs, see the
-[full experiment history](../results/history/EXPERIMENT_HISTORY.md).
+is intentionally more operational than the root README.
 
 ## 1. Research objectives
 
@@ -222,19 +220,7 @@ This matrix tests 16/32/64/128/256/512 MiB, three staging slots, asynchronous
 D2H, early release, reusable packing buffers, and direct CPU gradient buffers.
 Adam–H2D overlap is off.
 
-### 6.3 Regenerate the full local inventory
-
-After new runs are added under `outputs/`:
-
-```bash
-.venv/bin/python \
-  results/build_experiment_inventory.py
-```
-
-This updates the run/group machine-readable indexes. It does not overwrite the
-human-authored experiment history.
-
-### 6.4 Regenerate tracked figures
+### 6.3 Regenerate tracked figures
 
 ```bash
 MPLCONFIGDIR=/tmp/verl-result-figures \
@@ -257,8 +243,6 @@ Figure-specific raw inputs and plotting scripts are listed in the
 | 1.5B OOM/success boundary | `results/data/04_qwen15b_capacity/` |
 | 0.5B bucket sweep | `results/data/05_bucket_size_sweep_05b/` |
 | Figure provenance | `results/manifest.csv` |
-| Every local run | `results/history/all_runs.csv` |
-| Trial-and-error chronology | `results/history/EXPERIMENT_HISTORY.md` |
 
 ## 8. Known limitations
 

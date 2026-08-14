@@ -13,7 +13,6 @@ mkdir -p \
   "$DEST/04_qwen15b_capacity/all_gpu_oom" \
   "$DEST/04_qwen15b_capacity/cpu_adam_nostream_oom" \
   "$DEST/04_qwen15b_capacity/cpu_adam_stream_success" \
-  "$DEST/04_qwen15b_capacity/bucket_sweep" \
   "$DEST/05_bucket_size_sweep_05b/runs"
 
 copy_run_files() {
@@ -63,10 +62,6 @@ for source in "$ROOT"/outputs/pa-capacity-fp32-qwen15b-v1/FP32-FINAL-CPU-BEST-r*
 done
 cp -p "$ROOT"/outputs/pa-capacity-fp32-qwen15b-v1/summary/*.csv \
   "$DEST/04_qwen15b_capacity/cpu_adam_stream_success/"
-for source in "$ROOT"/outputs/pa-capacity-fp32-qwen15b-bucket-sweep-v1/FP32-*-r*; do
-  copy_run_files "$source" "$DEST/04_qwen15b_capacity/bucket_sweep/$(basename "$source")"
-done
-
 for source in "$ROOT"/outputs/pa-optimized-bucket-sweep-v1/STREAM-OPT-B*-r*; do
   copy_run_files "$source" "$DEST/05_bucket_size_sweep_05b/runs/$(basename "$source")"
 done

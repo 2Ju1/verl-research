@@ -3,7 +3,4 @@ results/figures/allgpu_vs_phase_offload.png,results/plotting/plot_allgpu_vs_phas
 results/figures/cpu_adamw.png,results/plotting/plot_results.py,results/data/01_phase_offload_vs_cpu_adamw,result
 results/figures/gradient_streaming.png,results/plotting/plot_results.py,results/data/03_nostream_vs_stream16,result
 results/figures/qwen15b_capacity.png,results/plotting/plot_results.py,results/data/04_qwen15b_capacity,result
-rootcause_abc_comparison,outputs/rootcause-abc-sequential-gpu1-v1/plot_rootcause.py,outputs/rootcause-abc-sequential-gpu1-v1/rootcause_summary.json,diagnostic_local_only
-cpu_adam_05b_by_phase,outputs/pa-repro-fp32-v1/cpu-adam-summary/plot_cpu_adam_05b_phases.py,outputs/pa-late-gpu-adam-30steps-v1;outputs/pa-cpu-adam-all-phase-fp32-v1,diagnostic_local_only
-nostream_vs_16mib_optimized_legacy_residual,,residual-derived,excluded
 bucket_size_sweep_05b,results/data/05_bucket_size_sweep_05b/optimized_bucket_sweep.json,results/data/05_bucket_size_sweep_05b,diagnostic_overlap_off

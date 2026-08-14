@@ -25,8 +25,8 @@ and parameter reload.
   bounded buckets, copy them asynchronously to pinned CPU buffers, and release
   GPU gradients early.
 - **Pipelined update:** CPU Adam bucket updates overlap with parameter H2D.
-- **Reproducible evidence:** 95 experiment groups and 512 runs are indexed,
-  including failed, OOM, superseded, and diagnostic runs.
+- **Reproducible evidence:** every run used by the reported comparisons is
+  preserved with its configuration, measurements, and logs.
 
 ## Main results
 
@@ -116,9 +116,7 @@ The implementation exploits this schedule in three layers:
    monolithic optimizer phase.
 
 The detailed design, controls, measurement boundaries, commands, and known
-limitations are in [Experiment guide](docs/EXPERIMENTS.md). The complete
-trial-and-error history is in
-[Experiment history](results/history/EXPERIMENT_HISTORY.md).
+limitations are in [Experiment guide](docs/EXPERIMENTS.md).
 
 ## Reproduce
 
@@ -184,7 +182,6 @@ results/                      Result index and provenance manifest
 results/figures/              Four primary result figures (PNG)
 results/plotting/             Figure regeneration scripts
 results/data/                 Raw evidence grouped by comparison
-results/history/              512-run inventory and trial-and-error record
 ```
 
 Start with these artifacts:
@@ -192,9 +189,6 @@ Start with these artifacts:
 - [Experiment guide](docs/EXPERIMENTS.md)
 - [Korean study report](reports/STUDY_REPORT_KO.md)
 - [Result index](results/README.md)
-- [Full experiment history](results/history/EXPERIMENT_HISTORY.md)
-- [All 512 runs (CSV)](results/history/all_runs.csv)
-- [All 95 output groups](results/history/GROUP_CATALOG.md)
 
 ## Data interpretation rules
 
