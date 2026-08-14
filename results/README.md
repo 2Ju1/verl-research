@@ -7,6 +7,9 @@
 핵심 원본 데이터는 비교 항목별로 `data/01_*`부터 `data/05_*`까지 정리되어
 있다. 이 문서에서 결과 수치와 해당 데이터 경로를 바로 확인할 수 있다.
 
+현재 연구 결과에 사용하는 네 그림은 모두 `figures/`에 PNG로 모았으며,
+재생성 코드는 `plotting/`에 있다. 중간 진단 그림은 핵심 그림 묶음과 구분한다.
+
 전체 시행착오와 95개 실험군·512개 run의 전수 기록은
 `history/README.md`에서 시작한다. 상세 연대기는
 `history/EXPERIMENT_HISTORY.md`, 기계 판독 원장은
@@ -14,8 +17,8 @@
 
 ## 1. All-on-GPU vs phase offload
 
-- Figure: `reports/figures/allgpu_vs_phase_offload_05b.png`, `.svg`
-- Script: `reports/figures/plot_allgpu_vs_phase_offload.py`
+- Figure: `results/figures/allgpu_vs_phase_offload.png`
+- Script: `results/plotting/plot_allgpu_vs_phase_offload.py`
 - Aggregated inputs:
   - `outputs/pa-repro-fp32-late-optimizer-smoke-v2/summary/phase_configs.csv`
   - `outputs/pa-repro-fp32-late-optimizer-smoke-v2/summary/actor_subphase_configs.csv`
@@ -24,8 +27,8 @@
 
 ## 2. Phase offload best vs CPU AdamW
 
-- Tracked figure: `reports/figures/result_cpu_adamw.png`, `.svg`
-- Tracked script: `reports/figures/plot_results.py`
+- Tracked figure: `results/figures/cpu_adamw.png`
+- Tracked script: `results/plotting/plot_results.py`
 - Compact figure: `outputs/phase-best-vs-cpu-adamw-memory-v1/summary/phase_best_vs_cpu_adamw_compact.png`, `.pdf`
 - Full figure: `outputs/phase-best-vs-cpu-adamw-memory-v1/summary/phase_best_vs_cpu_adamw_all_phases.png`, `.pdf`
 - Script: `outputs/phase-best-vs-cpu-adamw-memory-v1/plot_phase_best_vs_cpu_adamw.py`
@@ -43,8 +46,8 @@
 
 ## 3. No-stream vs optimized 16 MiB streaming
 
-- Tracked figure: `reports/figures/result_gradient_streaming.png`, `.svg`
-- Tracked script: `reports/figures/plot_results.py`
+- Tracked figure: `results/figures/gradient_streaming.png`
+- Tracked script: `results/plotting/plot_results.py`
 - Figure: `outputs/pa-repro-fp32-v1/streaming-summary/nostream_vs_16mib_optimized.png`, `.pdf`
 - Script: `outputs/pa-repro-fp32-v1/streaming-summary/plot_nostream_vs_16mib_optimized.py`
 - No-stream runs: `outputs/nostream-vs-16mib-direct-remeasure-v1/NOSTREAM-DIRECT-REMEASURE-r1..r3`
@@ -128,9 +131,8 @@ MPLCONFIGDIR=/tmp/verl-result-figures \
 
 ### B. All on GPU vs Phase offload phase memory
 
-- Tracked figure: `reports/figures/allgpu_vs_phase_offload_05b.png`
-- Vector figure: `reports/figures/allgpu_vs_phase_offload_05b.svg`
-- Plot script: `reports/figures/plot_allgpu_vs_phase_offload.py`
+- Tracked figure: `results/figures/allgpu_vs_phase_offload.png`
+- Plot script: `results/plotting/plot_allgpu_vs_phase_offload.py`
 - Aggregated result directory:
   `outputs/pa-repro-fp32-late-optimizer-smoke-v2/summary`
 - Source aggregate files:
@@ -167,8 +169,8 @@ MPLCONFIGDIR=/tmp/verl-result-figures \
 
 ### D. Qwen2.5-1.5B FP32 capacity
 
-- Tracked figure: `reports/figures/result_qwen15b_capacity.png`, `.svg`
-- Tracked script: `reports/figures/plot_results.py`
+- Tracked figure: `results/figures/qwen15b_capacity.png`
+- Tracked script: `results/plotting/plot_results.py`
 - Original local figure:
   `outputs/pa-capacity-fp32-qwen15b-bucket-sweep-v1/summary/qwen15b_fp32_capacity.png`
 - PDF:

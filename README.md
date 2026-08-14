@@ -39,7 +39,7 @@ phase-local peaks.
 
 ### 1. Phase offloading removes inactive residency
 
-![All GPU versus phase offload](reports/figures/allgpu_vs_phase_offload_05b.png)
+![All GPU versus phase offload](results/figures/allgpu_vs_phase_offload.png)
 
 Across the six GRPO phases, phase offloading reduces the Actor-backward peak
 from **10.24 GiB to 4.72 GiB**. GPU AdamW still raises Update to 8.40 GiB,
@@ -56,7 +56,7 @@ CPU AdamW eliminates the GPU optimizer-state peak, but a serial CPU update is
 much slower. This result isolates memory placement from the later streaming and
 overlap optimizations.
 
-![CPU AdamW result](reports/figures/result_cpu_adamw.png)
+![CPU AdamW result](results/figures/cpu_adamw.png)
 
 ### 3. Optimized gradient streaming lowers memory and total update time
 
@@ -70,7 +70,7 @@ end-to-end step by **1.186 s (12.1%)**. Backward itself becomes about 80 ms
 slower because hooks, packing, D2H traffic, and staging-slot backpressure run on
 its critical path; the pipelined Update more than recovers that cost.
 
-![Gradient streaming result](reports/figures/result_gradient_streaming.png)
+![Gradient streaming result](results/figures/gradient_streaming.png)
 
 The optimized streaming setting is:
 
@@ -91,7 +91,7 @@ All-GPU and CPU-Adam-without-streaming runs reached OOM on the 11.90 GiB GPU.
 CPU Adam plus gradient streaming completed, with a phase-local peak of
 **8.44 GiB** (the direct performance metric is approximately 8.377 GiB).
 
-![Qwen2.5-1.5B capacity result](reports/figures/result_qwen15b_capacity.png)
+![Qwen2.5-1.5B capacity result](results/figures/qwen15b_capacity.png)
 
 ## Method
 
@@ -179,9 +179,10 @@ src/verl/                     Modified verl submodule and offload engine
 benchmarks/offload/           Top-level benchmark entry points/config stubs
 data/gsm8k/                   Small benchmark dataset
 docs/EXPERIMENTS.md           Experimental design and reproduction guide
-reports/                      Technical reports and plotting scripts
-reports/figures/              Publication-ready figures
+reports/                      Technical reports
 results/                      Result index and provenance manifest
+results/figures/              Four primary result figures (PNG)
+results/plotting/             Figure regeneration scripts
 results/data/                 Raw evidence grouped by comparison
 results/history/              512-run inventory and trial-and-error record
 ```

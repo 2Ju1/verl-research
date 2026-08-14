@@ -20,7 +20,6 @@ plt.rcParams.update(
         "font.family": font_name,
         "axes.unicode_minus": False,
         "font.size": 10,
-        "svg.hashsalt": "verl-result-figures",
     }
 )
 
@@ -111,7 +110,7 @@ ax.spines["bottom"].set_color("#9AA6B2")
 ax.legend(loc="upper left", frameon=False, ncol=2, fontsize=9.5)
 
 fig.tight_layout(pad=0.9)
-out = ROOT / "reports/figures/allgpu_vs_phase_offload_05b"
+out = ROOT / "results/figures/allgpu_vs_phase_offload"
 fig.savefig(
     str(out) + ".png",
     dpi=220,
@@ -119,11 +118,4 @@ fig.savefig(
     facecolor="white",
     metadata={"Software": "verl-research"},
 )
-fig.savefig(
-    str(out) + ".svg",
-    bbox_inches="tight",
-    facecolor="white",
-    metadata={"Date": None},
-)
 print(str(out) + ".png")
-print(str(out) + ".svg")

@@ -7,11 +7,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-OUT = Path(__file__).resolve().parent
+OUT = Path(__file__).resolve().parents[1] / "figures"
 LIGHT = "#a8bacd"
 DARK = "#376b98"
 GRID = "#d9e2ec"
-plt.rcParams["svg.hashsalt"] = "verl-result-figures"
 
 
 def finish(fig, name):
@@ -21,11 +20,6 @@ def finish(fig, name):
         dpi=200,
         bbox_inches="tight",
         metadata={"Software": "verl-research"},
-    )
-    fig.savefig(
-        OUT / f"{name}.svg",
-        bbox_inches="tight",
-        metadata={"Date": None},
     )
     plt.close(fig)
 
@@ -60,7 +54,7 @@ def cpu_adam():
         ax.grid(axis="y", color=GRID)
         ax.set_axisbelow(True)
         ax.spines[["top", "right"]].set_visible(False)
-    finish(fig, "result_cpu_adamw")
+    finish(fig, "cpu_adamw")
 
 
 def streaming():
@@ -87,7 +81,7 @@ def streaming():
         ax.grid(axis="y", color=GRID)
         ax.set_axisbelow(True)
         ax.spines[["top", "right"]].set_visible(False)
-    finish(fig, "result_gradient_streaming")
+    finish(fig, "gradient_streaming")
 
 
 def capacity():
@@ -119,7 +113,7 @@ def capacity():
     ax.grid(axis="y", color=GRID)
     ax.set_axisbelow(True)
     ax.spines[["top", "right"]].set_visible(False)
-    finish(fig, "result_qwen15b_capacity")
+    finish(fig, "qwen15b_capacity")
 
 
 if __name__ == "__main__":

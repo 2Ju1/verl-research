@@ -238,10 +238,10 @@ human-authored experiment history.
 
 ```bash
 MPLCONFIGDIR=/tmp/verl-result-figures \
-  .venv/bin/python reports/figures/plot_allgpu_vs_phase_offload.py
+  .venv/bin/python results/plotting/plot_allgpu_vs_phase_offload.py
 
 MPLCONFIGDIR=/tmp/verl-result-figures \
-  .venv/bin/python reports/figures/plot_results.py
+  .venv/bin/python results/plotting/plot_results.py
 ```
 
 Figure-specific raw inputs and plotting scripts are listed in the
