@@ -1,42 +1,15 @@
 # Final figure data manifest
 
 최종 발표용 그림이 어떤 데이터와 스크립트에서 생성되는지 추적하기 위한 목록이다.
-모든 시간은 별도 표기가 없으면 warm-up 2 step을 제외한 평균이며, 메모리는 GiB이다.
+모든 시간은 별도 표기가 없으면 warm-up 2 training steps를 제외한 평균이며,
+메모리는 GiB이다.
 
 전체 시행착오와 95개 실험군·512개 run의 전수 기록은
 `experiment-history/README.md`에서 시작한다. 상세 연대기는
 `experiment-history/EXPERIMENT_HISTORY.md`, 기계 판독 원장은
 `experiment-history/all_runs.csv`와 `experiment-history/all_runs.json`이다.
 
-## 1. Placement Pareto
-
-- Figure: `reports/figures/placement_pareto_05b.png`, `.svg`
-- Script/data: `reports/figures/plot_placement_pareto.py`
-- Data status: 스크립트의 `rows`에 고정된 최종 집계값
-- Columns: placement, step time, throughput, allocated peak, device peak
-
-| placement | step (s) | throughput | allocated peak | device peak |
-|---|---:|---:|---:|---:|
-| GGG | 4.505 | 147.9 | 10.242 | 11.355 |
-| GGC | 5.328 | 125.1 | 10.246 | 11.331 |
-| GCG | 4.956 | 134.5 | 8.404 | 9.485 |
-| GCC | 5.733 | 116.3 | 8.405 | 9.392 |
-| CGG | 5.527 | 120.6 | 10.248 | 11.114 |
-| CGC | 6.439 | 103.3 | 10.246 | 11.347 |
-| CCG | 5.922 | 112.6 | 8.406 | 9.175 |
-| CCC | 6.812 | 98.1 | 8.403 | 9.280 |
-
-## 2. Placement별 6-phase memory
-
-- Figure: `reports/figures/phase_memory_2x3_05b.png`, `.svg`
-- Script: `reports/figures/plot_phase_memory_2x3.py`
-- Aggregated inputs:
-  - `outputs/pa-repro-fp32-v1/summary/phase_configs.csv`
-  - `outputs/pa-repro-fp32-v1/summary/actor_subphase_configs.csv`
-- Config IDs: `FP32-R-GGG`, `FP32-R-GGC`, `FP32-R-GCG`, `FP32-R-GCC`, `FP32-R-CGG`, `FP32-R-CGC`, `FP32-R-CCG`, `FP32-R-CCC`
-- Phase keys: rollout, actor_log_prob, reference_log_prob, actor_forward_end, actor_backward_end, actor_optimizer_end
-
-## 3. All-on-GPU vs phase offload
+## 1. All-on-GPU vs phase offload
 
 - Figure: `reports/figures/allgpu_vs_phase_offload_05b.png`, `.svg`
 - Script: `reports/figures/plot_allgpu_vs_phase_offload.py`
@@ -46,8 +19,10 @@
 - Compared configs: `FP32-LATE-GGG`, `FP32-LATE-CCC`
 - 마지막 표시 이름은 `Update`; 원본 tag는 `actor_optimizer_end`
 
-## 4. Phase offload best vs CPU AdamW
+## 2. Phase offload best vs CPU AdamW
 
+- Tracked figure: `reports/figures/final_cpu_adamw.png`, `.svg`
+- Tracked script: `reports/figures/plot_final_results.py`
 - Compact figure: `outputs/phase-best-vs-cpu-adamw-memory-v1/summary/phase_best_vs_cpu_adamw_compact.png`, `.pdf`
 - Full figure: `outputs/phase-best-vs-cpu-adamw-memory-v1/summary/phase_best_vs_cpu_adamw_all_phases.png`, `.pdf`
 - Script: `outputs/phase-best-vs-cpu-adamw-memory-v1/plot_phase_best_vs_cpu_adamw.py`
@@ -63,8 +38,10 @@
 | Phase offload best (GPU AdamW) | 8.408 | 0.129 |
 | Phase offload best + CPU AdamW | 2.365 | 3.565 |
 
-## 5. No-stream vs optimized 16 MiB streaming
+## 3. No-stream vs optimized 16 MiB streaming
 
+- Tracked figure: `reports/figures/final_gradient_streaming.png`, `.svg`
+- Tracked script: `reports/figures/plot_final_results.py`
 - Figure: `outputs/pa-repro-fp32-v1/streaming-summary/nostream_vs_16mib_optimized.png`, `.pdf`
 - Script: `outputs/pa-repro-fp32-v1/streaming-summary/plot_nostream_vs_16mib_optimized.py`
 - No-stream runs: `outputs/nostream-vs-16mib-direct-remeasure-v1/NOSTREAM-DIRECT-REMEASURE-r1..r3`
@@ -79,7 +56,7 @@
 16 MiB 최종 설정의 핵심은 `cpu_grad_accumulation=true`와
 `overlap_h2d_with_cpu_update=true`이다.
 
-## 6. Streaming root-cause A/B/C
+## 4. Streaming root-cause A/B/C
 
 - Figure: `outputs/rootcause-abc-sequential-gpu1-v1/rootcause_abc_comparison.png`, `.pdf`
 - Script: `outputs/rootcause-abc-sequential-gpu1-v1/plot_rootcause.py`
@@ -90,9 +67,9 @@
   - `c-stream16-pipeline/C-STREAM16-PIPELINE-TELEMETRY-r1`
 
 이 데이터는 원인 분석용 telemetry run이며 최종 성능 수치로 사용하지 않는다.
-최종 성능은 위 5번의 telemetry-off 3회 측정을 사용한다.
+최종 성능은 위 3번의 telemetry-off 3회 측정을 사용한다.
 
-## 7. GPU Adam vs CPU Adam six phases
+## 5. GPU Adam vs CPU Adam six phases
 
 - Figure: `outputs/pa-cpu-adam-all-phase-fp32-v1/summary/cpu_adam_05b_by_phase.png`, `.pdf`
 - Script: `outputs/pa-repro-fp32-v1/cpu-adam-summary/plot_cpu_adam_05b_phases.py`
@@ -187,6 +164,8 @@ MPLCONFIGDIR=/tmp/verl-final-figures \
 
 ### D. Qwen2.5-1.5B FP32 capacity
 
+- Tracked figure: `reports/figures/final_qwen15b_capacity.png`, `.svg`
+- Tracked script: `reports/figures/plot_final_results.py`
 - Slide figure:
   `outputs/pa-capacity-fp32-qwen15b-bucket-sweep-v1/summary/qwen15b_fp32_capacity.png`
 - PDF:

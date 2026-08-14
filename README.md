@@ -16,8 +16,6 @@ Actor/Reference state, CPU AdamW removes GPU optimizer state, and 16 MiB
 gradient buckets reduce the Actor-backward peak while overlapping CPU update
 and parameter reload.
 
-![Experiment overview](offload_experiment_overview.png)
-
 ## Highlights
 
 - **Phase-exclusive residency:** Actor and Reference parameters occupy the GPU
@@ -33,9 +31,11 @@ and parameter reload.
 ## Main results
 
 Unless noted otherwise, the final comparison uses Qwen2.5-0.5B-Instruct,
-full-parameter FP32 training, GSM8K, one approximately 11.9 GiB GPU, two warm-up
-steps, and three measured repetitions. Performance bars use telemetry-off runs;
-memory bars use corrected phase-local peaks.
+full-parameter FP32 training, GSM8K, one NVIDIA TITAN Xp with 11.90 GiB usable
+capacity, two warm-up steps, and three repeated runs. The GPU/CPU AdamW runs
+measure 30 of 32 training steps; the final streaming runs measure 28 of 30.
+Performance bars use telemetry-off runs and memory bars use corrected
+phase-local peaks.
 
 ### 1. Phase offloading removes inactive residency
 
@@ -56,6 +56,8 @@ CPU AdamW eliminates the GPU optimizer-state peak, but a serial CPU update is
 much slower. This result isolates memory placement from the later streaming and
 overlap optimizations.
 
+![CPU AdamW result](reports/figures/final_cpu_adamw.png)
+
 ### 3. Optimized gradient streaming lowers memory and total update time
 
 | Configuration | Backward peak | Backward | Update | Actor update | Step |
@@ -67,6 +69,8 @@ The optimized path reduces the backward peak by **1.319 GiB (27.9%)** and the
 end-to-end step by **1.186 s (12.1%)**. Backward itself becomes about 80 ms
 slower because hooks, packing, D2H traffic, and staging-slot backpressure run on
 its critical path; the pipelined Update more than recovers that cost.
+
+![Gradient streaming result](reports/figures/final_gradient_streaming.png)
 
 The final streaming setting is:
 
@@ -86,6 +90,8 @@ Adam–parameter H2D overlap  enabled
 All-GPU and CPU-Adam-without-streaming runs reached OOM on the 11.90 GiB GPU.
 CPU Adam plus gradient streaming completed, with a presentation phase peak of
 **8.44 GiB** (the direct performance metric is approximately 8.377 GiB).
+
+![Qwen2.5-1.5B capacity result](reports/figures/final_qwen15b_capacity.png)
 
 ## Method
 
@@ -183,12 +189,13 @@ reports/final-figure-data/    Curated final data and provenance manifest
 Start with these artifacts:
 
 - [Experiment guide](docs/EXPERIMENTS.md)
+- [Final Korean study report](reports/FINAL_STUDY_REPORT_KO.md)
+- [Corrected Korean presentation script](reports/FINAL_PRESENTATION_SCRIPT_KO.md)
+- [Presentation consistency audit](reports/PRESENTATION_AUDIT.md)
 - [Final-figure data manifest](reports/final-figure-data/README.md)
 - [Full experiment history](reports/final-figure-data/experiment-history/EXPERIMENT_HISTORY.md)
 - [All 512 runs (CSV)](reports/final-figure-data/experiment-history/all_runs.csv)
 - [All 95 output groups](reports/final-figure-data/experiment-history/GROUP_CATALOG.md)
-- [English technical report](reports/offload-experiment-report-en.md)
-- [Korean technical report](reports/offload-experiment-report-ko.md)
 
 ## Data interpretation rules
 

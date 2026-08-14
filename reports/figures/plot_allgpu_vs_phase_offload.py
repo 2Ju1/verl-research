@@ -6,14 +6,22 @@ import numpy as np
 from matplotlib import font_manager
 
 
-ROOT = Path("/mnt/sda/juwon/verl-research")
-SUMMARY = ROOT / "outputs/pa-repro-fp32-late-optimizer-smoke-v2/summary"
+ROOT = Path(__file__).resolve().parents[2]
+SUMMARY = ROOT / "reports/final-figure-data/collected/02_allgpu_vs_phase_offload"
 
-font_path = "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
-font_manager.fontManager.addfont(font_path)
-font_name = font_manager.FontProperties(fname=font_path).get_name()
+font_path = Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc")
+if font_path.exists():
+    font_manager.fontManager.addfont(font_path)
+    font_name = font_manager.FontProperties(fname=font_path).get_name()
+else:
+    font_name = "DejaVu Sans"
 plt.rcParams.update(
-    {"font.family": font_name, "axes.unicode_minus": False, "font.size": 10}
+    {
+        "font.family": font_name,
+        "axes.unicode_minus": False,
+        "font.size": 10,
+        "svg.hashsalt": "verl-final-figures",
+    }
 )
 
 configs = {
@@ -104,7 +112,18 @@ ax.legend(loc="upper left", frameon=False, ncol=2, fontsize=9.5)
 
 fig.tight_layout(pad=0.9)
 out = ROOT / "reports/figures/allgpu_vs_phase_offload_05b"
-fig.savefig(str(out) + ".png", dpi=220, bbox_inches="tight", facecolor="white")
-fig.savefig(str(out) + ".svg", bbox_inches="tight", facecolor="white")
+fig.savefig(
+    str(out) + ".png",
+    dpi=220,
+    bbox_inches="tight",
+    facecolor="white",
+    metadata={"Software": "verl-research"},
+)
+fig.savefig(
+    str(out) + ".svg",
+    bbox_inches="tight",
+    facecolor="white",
+    metadata={"Date": None},
+)
 print(str(out) + ".png")
 print(str(out) + ".svg")

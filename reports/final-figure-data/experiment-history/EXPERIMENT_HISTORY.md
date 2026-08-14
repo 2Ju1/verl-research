@@ -29,7 +29,7 @@ JSON telemetry, `--detail`, `--sync`, Nsight는 실행 시간을 교란할 수 �
 ### 1.1 `offload-measurement-v2`
 
 - 5 runs: 성공 4, 실패 1
-- 초기 계측 체계가 phase, transfer, memory를 실제로 기록하는지 확인한 단계다.
+- 초기 계측 체계가 phase, transfer, memory를 실제로 기록하는지 확인한 실험군이다.
 - 이후 full matrix의 기반이 되었지만 최종 수치로 사용하지 않았다.
 
 ### 1.2 `offload-fullft-v3`, `v4`
@@ -95,7 +95,7 @@ JSON telemetry, `--detail`, `--sync`, Nsight는 실행 시간을 교란할 수 �
 - `zero-offload-z00-smoke`: 실패 1
 - `zero-offload-z01-z03-smoke`: 3/3 성공
 - `zero-offload-z01-z03-smoke-v2`: 1/1 성공
-- Z00의 실패 후 CPU master parameter/optimizer와 gradient 수집 경로를 단계적으로 분리했다.
+- Z00의 실패 후 CPU master parameter/optimizer와 gradient 수집 경로를 phase별로 분리했다.
 - Z01–Z03에서 최소 기능과 checkpoint/precision 경로가 동작하는지 확인했다.
 
 ### 3.2 Z03M–Z06: precision, streaming, accumulation, overlap
@@ -115,7 +115,7 @@ JSON telemetry, `--detail`, `--sync`, Nsight는 실행 시간을 교란할 수 �
 - `non-fsdp-unified-v1`: 48/48 성공
 - sync/async, release, bucket, accumulation, pipeline 등 기능 조합을 통합 경로에서 비교했다.
 - 48개 run은 구현 옵션의 기능적 유효 범위를 넓게 확인한 데이터다.
-- 이 단계의 O-ASYNC/O-BKT/O-GACC/O-PIPE 등은 후속 PA 실험의 후보 설정을 만드는 데 사용됐다.
+- 이 시기의 O-ASYNC/O-BKT/O-GACC/O-PIPE 등은 후속 PA 실험의 후보 설정을 만드는 데 사용됐다.
 
 ## 5. Phase-aware(PA) streaming과 allocator 시행착오
 
@@ -158,7 +158,8 @@ JSON telemetry, `--detail`, `--sync`, Nsight는 실행 시간을 교란할 수 �
 
 - 48 runs: 성공 42, 실패 6
 - FP32 조건에서 placement와 streaming 후보를 재현했다.
-- 현재 `reports/figures/phase_memory_2x3_05b.*`의 주요 집계 원천이다.
+- 과거 placement 2×3 진단 그림의 주요 집계 원천이었다. 해당 그림은 최종 발표
+  흐름에서 제외했지만 raw run은 역사 자료로 보존한다.
 - 실패 6개는 catalog에서 개별 설정을 확인해야 하며 평균에 포함하지 않는다.
 
 ### 6.3 activation/late optimizer probe
@@ -351,12 +352,13 @@ JSON telemetry, `--detail`, `--sync`, Nsight는 실행 시간을 교란할 수 �
 
 ## 13. 최종 그림별 채택 데이터
 
-1. Placement Pareto: `reports/figures/plot_placement_pareto.py`의 고정 최종 rows
-2. Placement 6-phase memory: `pa-repro-fp32-v1/summary`
-3. All GPU vs phase offload: `pa-repro-fp32-late-optimizer-smoke-v2/summary`
-4. GPU AdamW vs CPU AdamW: `phase-best-vs-cpu-adamw-performance-v1` + memory-v1
-5. No-stream vs 16 MiB: no-stream direct remeasure + `stream16-pipeline-performance-3x-gpu1-v1`
-6. 1.5B capacity: All-GPU OOM + no-stream OOM snapshot-v2 + CPU-BEST r1..r3
+1. All GPU vs phase offload: `pa-repro-fp32-late-optimizer-smoke-v2/summary`
+2. GPU AdamW vs CPU AdamW: `phase-best-vs-cpu-adamw-performance-v1` + memory-v1
+3. No-stream vs 16 MiB: no-stream direct remeasure + `stream16-pipeline-performance-3x-gpu1-v1`
+4. 1.5B capacity: All-GPU OOM + no-stream OOM snapshot-v2 + CPU-BEST r1..r3
+
+Placement Pareto와 2×3 placement matrix는 유효한 중간 진단이지만 2026-08-14
+최종 발표의 주장 구조에는 사용하지 않아 final figure 목록에서 제외했다.
 
 정확한 파일 경로는 상위 `../README.md`의 “Slide figures shown in the final deck”와
 `../manifest.csv`에 기록돼 있다.

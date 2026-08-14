@@ -1,6 +1,6 @@
 # Collected final experiment data
 
-최종 슬라이드의 네 실험에 사용된 최소 데이터 사본이다.
+최종 슬라이드의 네 핵심 비교와 추가 bucket 진단에 사용된 최소 데이터 사본이다.
 
 - `01_phase_offload_vs_cpu_adamw`: GPU AdamW/CPU AdamW 성능 3회 및 memory run
 - `02_allgpu_vs_phase_offload`: GGG/CCC raw run과 phase 집계 CSV

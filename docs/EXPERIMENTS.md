@@ -46,9 +46,8 @@ activation placement. These runs established two points:
 - Merely storing optimizer state on CPU does not remove the Update peak when it
   must be loaded back for GPU AdamW.
 
-The older matrix analysis remains in the
-[English report](../reports/offload-experiment-report-en.md) and
-[Korean report](../reports/offload-experiment-report-ko.md).
+The older matrix analysis remains traceable in the complete experiment-history
+inventory, but it is not presented as the final study result.
 
 ### 3.2 Phase-local measurement correction
 
@@ -239,13 +238,10 @@ human-authored experiment history.
 
 ```bash
 MPLCONFIGDIR=/tmp/verl-final-figures \
-  .venv/bin/python reports/figures/plot_placement_pareto.py
-
-MPLCONFIGDIR=/tmp/verl-final-figures \
-  .venv/bin/python reports/figures/plot_phase_memory_2x3.py
-
-MPLCONFIGDIR=/tmp/verl-final-figures \
   .venv/bin/python reports/figures/plot_allgpu_vs_phase_offload.py
+
+MPLCONFIGDIR=/tmp/verl-final-figures \
+  .venv/bin/python reports/figures/plot_final_results.py
 ```
 
 Figure-specific raw inputs and plotting scripts are listed in the
